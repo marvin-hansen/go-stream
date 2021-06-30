@@ -1,0 +1,77 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+
+.idea/
+.idea/*
+
+.project
+.classpath
+.settings/
+.groovy/
+.ijwb/
+
+bin/
+target/
+
+*.pyc
+Logs/*
+*.local
+
+# ignore custom symlinks
+start-db.sh
+stop-db.sh
+setup-db.sh
+
+# Emacs save files
+*~
+\#*\#
+.\#*
+
+# Vim-related files
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+
+### https://raw.github.com/github/gitignore/90f149de451a5433aebd94d02d11b0e28843a1af/Terraform.gitignore
+
+# Local .terraform directories
+terraform/*/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+
+# tmp plan files.
+*.plan
+
+# Ignore any .tfvars files that are generated automatically for each Terraform run. Most
+# .tfvars files are managed as part of configuration and so should be included in
+# version control.
+#
+terraform/dev/terraform.tfvars
+terraform/service.json
+
+bazel-out
+dist
+
+planter
+!planter/.gitkeep
+
+output.log
+/terraform/dev/.terraform.lock.hcl
+
+/proto/cmdb/*.pb.go
+/proto/smdb/*.pb.go
+
+/proto/*/*.pb.go
