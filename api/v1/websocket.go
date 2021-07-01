@@ -1,9 +1,8 @@
 package v1
 
 import (
-	"go-stream/api/types"
-
 	"github.com/gorilla/websocket"
+	"go-stream/api/types"
 	"time"
 )
 
@@ -20,7 +19,7 @@ var wsServe = func(cfg *types.WsConfig, handler types.WsHandler, errHandler type
 		// closed by the client.
 		defer close(doneC)
 		if cfg.WebsocketKeepalive {
-			keepAlive(c, cfg.WebsocketTimeout)
+			keepAlive(c, time.Duration(cfg.WebsocketTimeout))
 		}
 		// Wait for the stopC channel to be closed.  We do that in a
 		// separate goroutine because ReadMessage is a blocking  operation.

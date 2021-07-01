@@ -8,6 +8,7 @@ type SDKImpl struct {
 	apiKey    string
 	url       string
 	keepAlive bool
+	timeOut   int
 }
 
 var (
@@ -18,6 +19,7 @@ var (
 	volumeInvoke    InvokeFunction
 	errorInvoke     InvokeFunction
 	reconnectInvoke InvokeFunction
+	wsCfg           WsConfig
 )
 
 func NewCoinApiSDKV1(sdkConfig *SdkConfig) (sdk *SDKImpl) {
@@ -26,8 +28,18 @@ func NewCoinApiSDKV1(sdkConfig *SdkConfig) (sdk *SDKImpl) {
 		apiKey:    sdkConfig.ApiKey,
 		url:       url,
 		keepAlive: sdkConfig.Heartbeat,
+		timeOut:   sdkConfig.Timeout,
 	}
+	sdk.init()
 	return sdk
+}
+
+func (s SDKImpl) init() {
+	wsCfg = WsConfig{
+		Endpoint:           s.url,
+		WebsocketKeepalive: s.keepAlive,
+		WebsocketTimeout:   s.timeOut,
+	}
 }
 
 func (s SDKImpl) SendHelloMessage(hello Hello) {

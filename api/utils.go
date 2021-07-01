@@ -23,6 +23,7 @@ func getSDKConfig(apiKey string) (sdkConfig *SdkConfig) {
 		ApiVersion:  ApiV1,
 		Environment: TestInsecure,
 		Heartbeat:   false,
+		Timeout:     3,
 	}
 	return sdkConfig
 }

@@ -6,23 +6,38 @@ import (
 	t "go-stream/api/types"
 )
 
+func (s SDKImpl) processMessages(errHandler t.WsErrHandler, invokeFunction t.InvokeFunction) (doneC, stopC chan struct{}, err error) {
+
+	wsConfig := s.getWSConfig()
+	wsHandler := s.getWSHandler(errHandler, invokeFunction)
+
+	return wsServe(wsConfig, wsHandler, errHandler)
+}
+
+func (s SDKImpl) getWSConfig() (wsCfg *t.WsConfig) {
+	wsCfg = &t.WsConfig{
+		Endpoint:           s.url,
+		WebsocketKeepalive: s.keepAlive,
+		WebsocketTimeout:   s.timeOut,
+	}
+	return wsCfg
+}
+
 func (s SDKImpl) getWSHandler(errHandler t.WsErrHandler, invokeFunction t.InvokeFunction) (wsHandler t.WsHandler) {
 
 	wsHandler = func(message []byte) {
+		// convert raw message into DataMessage type
 		dataMsg := s.getDataMessage(message, errHandler)
-		err := s.handle(dataMsg, invokeFunction)
+
+		// Apply invoke function
+		err := invokeFunction(dataMsg)
+
+		// check for errror
 		if err != nil {
 			errHandler(err)
 		}
 	}
 	return wsHandler
-}
-
-func (s SDKImpl) handle(message *t.DataMessage, invokeFunction t.InvokeFunction) (err error) {
-	if invokeFunction == nil {
-		return
-	}
-	return invokeFunction(message)
 }
 
 func (s SDKImpl) getDataMessage(message []byte, errHandler t.WsErrHandler) (dataMessage *t.DataMessage) {
