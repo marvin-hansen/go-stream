@@ -1,4 +1,4 @@
-package api
+package v1
 
 import (
 	"github.com/shopspring/decimal"
@@ -9,19 +9,19 @@ import (
 type MessageType string
 
 const (
-	TRADE     MessageType = "trade"
-	QUOTE     MessageType = "quote"
-	BOOK      MessageType = "book"
-	BOOK5     MessageType = "book5"
-	BOOK20    MessageType = "book20"
-	BOOK50    MessageType = "book50"
-	OHLCV     MessageType = "ohlcv"
-	VOLUME    MessageType = "volume"
-	HEARTBEAT MessageType = "heartbeat"
-	HELLO     MessageType = "hello"
-	ERROR     MessageType = "error"
-	EXRATE    MessageType = "exrate"
-	RECONNECT MessageType = "reconnect"
+	TRADE        MessageType = "trade"
+	QUOTE        MessageType = "quote"
+	BOOK         MessageType = "book"
+	BOOK5        MessageType = "book5"
+	BOOK20       MessageType = "book20"
+	BOOK50       MessageType = "book50"
+	OHLCV        MessageType = "ohlcv"
+	VOLUME       MessageType = "volume"
+	HEARTBEAT    MessageType = "heartbeat"
+	HELLO        MessageType = "hello"
+	ERROR        MessageType = "error"
+	EXCHANGERATE MessageType = "exrate"
+	RECONNECT    MessageType = "reconnect"
 )
 
 // InvokeFunction is a unified function type for all event handlers.
