@@ -3,13 +3,12 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
+        "enums.go",
+        "functions.go",
         "interface.go",
-        "types.go",
+        "messages.go",
     ],
-    importpath = "go-stream/api",
+    importpath = "go-stream/api/types",
     visibility = ["//visibility:public"],
-    deps = [
-        "//api/types:go_default_library",
-        "//api/v1:go_default_library",
-    ],
+    deps = ["@com_github_shopspring_decimal//:go_default_library"],
 )

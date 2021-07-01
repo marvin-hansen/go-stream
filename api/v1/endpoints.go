@@ -1,5 +1,9 @@
 package v1
 
+import (
+	. "go-stream/api/types"
+)
+
 func getUrl(env EnvironmentType) (url string) {
 	switch env {
 	case ProdEncrypted:
@@ -15,17 +19,6 @@ func getUrl(env EnvironmentType) (url string) {
 	}
 
 }
-
-// EnvironmentType
-// https://docs.coinapi.io/#endpoints-2
-type EnvironmentType int
-
-const (
-	ProdEncrypted EnvironmentType = iota
-	ProdInsecure
-	TestEncrypted
-	TestInsecure
-)
 
 // Endpoints WebSocket endpoint provides real-time market data streaming which works in Subscribe-Publish communication model.
 // https://docs.coinapi.io/#md-websocket-api

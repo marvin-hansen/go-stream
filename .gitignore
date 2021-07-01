@@ -16,3 +16,5 @@
 /.idea/go-stream.iml
 /.idea/modules.xml
 /.idea/vcs.xml
+/dist/
+/bazel-out

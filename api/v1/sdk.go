@@ -1,15 +1,27 @@
 package v1
 
-type SDK struct {
+import (
+	. "go-stream/api/types"
+)
+
+type SDKImpl struct {
 	apiKey string
 	url    string
 }
 
-func NewSDK(apiKey string, envType EnvironmentType) (sdk *SDK) {
+func NewCoinApiSDKV1(apiKey string, envType EnvironmentType) (sdk *SDKImpl) {
 	url := getUrl(envType)
-	sdk = &SDK{
+	sdk = &SDKImpl{
 		apiKey: apiKey,
 		url:    url,
 	}
 	return sdk
+}
+
+func (s SDKImpl) SendHelloMessage(hello Hello) {
+
+}
+
+func (s SDKImpl) CloseConnect() {
+
 }

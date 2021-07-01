@@ -1,31 +1,9 @@
-package v1
+package types
 
 import (
 	"github.com/shopspring/decimal"
 	"time"
 )
-
-// MessageType mimics a string enum.
-type MessageType string
-
-const (
-	TRADE        MessageType = "trade"
-	QUOTE        MessageType = "quote"
-	BOOK         MessageType = "book"
-	BOOK5        MessageType = "book5"
-	BOOK20       MessageType = "book20"
-	BOOK50       MessageType = "book50"
-	OHLCV        MessageType = "ohlcv"
-	VOLUME       MessageType = "volume"
-	HEARTBEAT    MessageType = "heartbeat"
-	HELLO        MessageType = "hello"
-	ERROR        MessageType = "error"
-	EXCHANGERATE MessageType = "exrate"
-	RECONNECT    MessageType = "reconnect"
-)
-
-// InvokeFunction is a unified function type for all event handlers.
-type InvokeFunction func(message DataMessage)
 
 // DataMessage is a composite type as substitute for Golang's missing type inheritance.
 type DataMessage struct {
