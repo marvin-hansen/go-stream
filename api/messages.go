@@ -32,7 +32,7 @@ type DataMessage struct {
 	Type         MessageType
 	ErrorMessage ErrorMessage
 	ExchangeRate ExchangeRate
-	Orderbook    Orderbook
+	Orderbook    OrderBook
 	Ohlcv        Ohlcv
 	Quote        Quote
 	Reconnect    Reconnect
@@ -40,12 +40,15 @@ type DataMessage struct {
 	Trade        Trade
 	Volume       Volume
 }
+
+// Ask subtype for OrderBook
 type Ask struct {
 	Type  MessageType     `json:"type"`
 	Price decimal.Decimal `json:"price"`
 	Size  decimal.Decimal `json:"size"`
 }
 
+// Bid subtype for OrderBook
 type Bid struct {
 	Type  MessageType     `json:"type"`
 	Price decimal.Decimal `json:"price"`
@@ -88,12 +91,12 @@ type Hello struct {
 	Subscribe_update_limit_ms_book_snapshot uint32      `json:"subscribe_update_limit_ms_book_snapshot"`
 }
 
-// Orderbook Book message is sent for each snapshot or update of the order book.
+// OrderBook Book message is sent for each snapshot or update of the order book.
 // After subscription to this data type is initialized, we immediately start delivering updates to the order book
 // and at least one snapshot will be provided as soon as possible with the nearest update of the book.
 // Book message represents total amount of bids and asks aggregated by price level.
 // https://docs.coinapi.io/#orderbook-l2-full-in
-type Orderbook struct {
+type OrderBook struct {
 	Type          MessageType `json:"type"`
 	Symbol_id     string      `json:"symbol_id"`
 	Sequence      uint32      `json:"sequence"`
@@ -179,8 +182,9 @@ type Volume struct {
 	Volume_by_symbol []VolumeBySymbol `json:"volume_by_symbol"`
 }
 
+// VolumeBySymbol subtype for Volume
+// https://docs.coinapi.io/#volume-in
 type VolumeBySymbol struct {
-	// https://docs.coinapi.io/#volume-in
 	Symbol_id      string          `json:"symbol_id"`
 	Asset_id_base  string          `json:"asset_id_base"`
 	Asset_id_quote string          `json:"asset_id_quote"`
