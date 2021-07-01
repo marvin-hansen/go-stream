@@ -9,6 +9,16 @@ type SDKImpl struct {
 	url    string
 }
 
+var (
+	tradesInvoke    InvokeFunction
+	quotesInvoke    InvokeFunction
+	bookInvoke      InvokeFunction
+	ohlcvInvoke     InvokeFunction
+	volumeInvoke    InvokeFunction
+	errorInvoke     InvokeFunction
+	reconnectInvoke InvokeFunction
+)
+
 func NewCoinApiSDKV1(apiKey string, envType EnvironmentType) (sdk *SDKImpl) {
 	url := getUrl(envType)
 	sdk = &SDKImpl{
