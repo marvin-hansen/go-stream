@@ -7,16 +7,16 @@ import (
 
 // DataMessage is a composite type as substitute for Golang's missing type inheritance.
 type DataMessage struct {
-	Type         MessageType
-	ErrorMessage ErrorMessage
-	ExchangeRate ExchangeRate
-	Orderbook    OrderBook
-	Ohlcv        Ohlcv
-	Quote        Quote
-	Reconnect    Reconnect
-	Hearbeat     Heartbeat
-	Trade        Trade
-	Volume       Volume
+	Type         *MessageType
+	ErrorMessage *ErrorMessage
+	ExchangeRate *ExchangeRate
+	Orderbook    *OrderBook
+	Ohlcv        *Ohlcv
+	Quote        *Quote
+	Reconnect    *Reconnect
+	Hearbeat     *Heartbeat
+	Trade        *Trade
+	Volume       *Volume
 }
 
 // Ask subtype for OrderBook

@@ -7,8 +7,14 @@ go_library(
         "errors.go",
         "sdk.go",
         "setters.go",
+        "websocket.go",
+        "ws_handler.go",
     ],
     importpath = "go-stream/api/v1",
     visibility = ["//visibility:public"],
-    deps = ["//api/types:go_default_library"],
+    deps = [
+        "//api/types:go_default_library",
+        "@com_github_bitly_go_simplejson//:go_default_library",
+        "@com_github_gorilla_websocket//:go_default_library",
+    ],
 )

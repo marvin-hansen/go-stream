@@ -5,8 +5,9 @@ import (
 )
 
 type SDKImpl struct {
-	apiKey string
-	url    string
+	apiKey    string
+	url       string
+	keepAlive bool
 }
 
 var (
@@ -19,11 +20,12 @@ var (
 	reconnectInvoke InvokeFunction
 )
 
-func NewCoinApiSDKV1(apiKey string, envType EnvironmentType) (sdk *SDKImpl) {
-	url := getUrl(envType)
+func NewCoinApiSDKV1(sdkConfig *SdkConfig) (sdk *SDKImpl) {
+	url := getUrl(sdkConfig.Environment)
 	sdk = &SDKImpl{
-		apiKey: apiKey,
-		url:    url,
+		apiKey:    sdkConfig.ApiKey,
+		url:       url,
+		keepAlive: sdkConfig.Heartbeat,
 	}
 	return sdk
 }
