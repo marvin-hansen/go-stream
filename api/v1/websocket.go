@@ -70,16 +70,10 @@ func (s SDKImpl) process() (doneC, stopC chan struct{}, err error) {
 				}
 				return
 			}
-			//printMsg(mtd, message)
 			handler(message)
 		}
 	}()
 	return
-}
-
-func printMsg(mtd string, message []byte) {
-	msg := string(message)
-	log.Println(mtd + "message: " + msg)
 }
 
 func keepAlive(c *websocket.Conn, timeout time.Duration) {
