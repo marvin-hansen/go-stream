@@ -10,23 +10,8 @@ import (
 func (s SDKImpl) SendHello(hello types.Hello) {
 	mtd := "SendHello: "
 
-	h := `
-			{
-			  "type": "hello",
-			  "apikey": "550ECBDB-B1EF-42FE-8702-19CCAD9C2A7C",
-			  "heartbeat": false,
-			  "subscribe_data_type": ["ohlcv"],
-			  "subscribe_filter_symbol_id": ["COINBASE_SPOT_BTC_USD"],
-		      "subscribe_filter_period_id": ["1MIN"]
-			}
-`
-
-	b := []byte(h)
-	var err error
-
-	//m, err := json.Marshal(hello)
-	//logError(err)
-	//b := []byte(m)
+	b, err := hello.GetJSON()
+	logError(err)
 
 	err = con.WriteMessage(1, b)
 	if err != nil {

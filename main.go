@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go-stream/api"
-	"os"
+	"log"
 	"time"
 )
 
@@ -18,16 +18,18 @@ func main() {
 
 	//TestConnection()
 	//
+	//TestMarshalHelloMsg()
+
 	TestHello()
 }
 
-func TestHelloMarshal() {
+func TestMarshalHelloMsg() {
 
 	hello := getHello()
 
-	println("Struct: ")
-	println(hello)
+	b, _ := hello.GetJSON()
 
+	log.Println(string(b))
 }
 
 func TestMetaListExchanges() {
@@ -115,7 +117,6 @@ func TestHello() {
 	sdk.CloseConnection()
 
 	println("Goodbye!")
-	os.Exit(1)
 }
 
 func TestConnection() {

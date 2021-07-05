@@ -74,21 +74,26 @@ func GetErrorInvoke() (errorInvoke types.InvokeFunction) {
 }
 
 func getHello() (hello types.Hello) {
-	var dataTypes = [25]string{}
-	dataTypes[0] = "ohlcv"
-	var assetIds = [25]string{}
-	assetIds[0] = "BTC"
+	var dataTypes []string
+	var symbolIds []string
+	var periodIDs []string
+
+	dataTypes = append(dataTypes, "ohlcv")
+	dataTypes = append(dataTypes, "trade")
+	dataTypes = append(dataTypes, "quote")
+	dataTypes = append(dataTypes, "exrate")
+	dataTypes = append(dataTypes, "book5")
+
+	symbolIds = append(symbolIds, "COINBASE_SPOT_BTC_USD")
+	periodIDs = append(periodIDs, "1MIN")
 
 	hello = types.Hello{
-		Type:                                    "hello",
-		Api_key:                                 apiKey,
-		Heartbeat:                               false,
-		Subscribe_data_type:                     dataTypes,
-		Subscribe_filter_symbol_id:              assetIds,
-		Subscribe_update_limit_ms_quote:         0,
-		Subscribe_update_limit_ms_book_snapshot: 0,
+		Type:                       "hello",
+		Api_key:                    apiKey,
+		Heartbeat:                  false,
+		Subscribe_data_type:        dataTypes,
+		Subscribe_filter_period_id: periodIDs,
+		Subscribe_filter_symbol_id: symbolIds,
 	}
-
 	return hello
-
 }
