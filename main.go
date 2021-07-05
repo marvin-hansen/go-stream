@@ -8,9 +8,9 @@ import (
 const apiKey = "550ECBDB-B1EF-42FE-8702-19CCAD9C2A7C"
 
 func main() {
-	TestConnection()
+	//TestConnection()
 	//
-	//TestHello()
+	TestHello()
 }
 
 func TestHello() {
@@ -19,17 +19,24 @@ func TestHello() {
 	println(" * NewSDK!")
 	sdk := api.NewSDK(apiKey)
 
+	println(" * GetErrorInvoke!")
+	errInvokeFunc := GetErrorInvoke()
+
 	println(" * SetErrorInvoke!")
-	sdk.SetErrorInvoke(nil)
+	sdk.SetErrorInvoke(errInvokeFunc)
+
+	println(" * GetOHLCVInvoke!")
+	OHLCVInvoke := GetOHLCVInvoke()
 
 	println(" * SetOHLCVInvoke!")
-	sdk.SetOHLCVInvoke(nil)
+	sdk.SetOHLCVInvoke(OHLCVInvoke)
 
 	println(" * SendHello!")
 	hello := getHello()
 	sdk.SendHello(hello)
 
-	//time.Sleep(time.Second * 5)
+	println(" * Wait!")
+	time.Sleep(time.Second * 1)
 
 	println(" * CloseConnection!")
 	sdk.CloseConnection()
