@@ -18,3 +18,4 @@
 /.idea/vcs.xml
 /dist/
 /bazel-out
+/.idea/statistic.xml
