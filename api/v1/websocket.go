@@ -8,14 +8,13 @@ import (
 )
 
 func (s SDKImpl) SendHello(hello types.Hello) {
-	mtd := "SendHello: "
 
 	b, err := hello.GetJSON()
 	logError(err)
 
 	err = con.WriteMessage(1, b)
 	if err != nil {
-		log.Println(mtd, "can't send Hello message!")
+		log.Println("can't send Hello message!")
 		logError(err)
 		return
 	}
@@ -33,15 +32,12 @@ func (s SDKImpl) SendHello(hello types.Hello) {
 }
 
 func (s SDKImpl) process() (doneC, stopC chan struct{}, err error) {
-	mtd := "process: "
 
 	errHandler := logError
 	handler := s.getWSHandler(errHandler)
 
 	doneC = make(chan struct{})
 	stopC = make(chan struct{})
-
-	println(mtd, " * Processing ")
 
 	go func() {
 		// This function will exit either on error from ReadMessage
@@ -65,7 +61,7 @@ func (s SDKImpl) process() (doneC, stopC chan struct{}, err error) {
 			_, message, err = con.ReadMessage()
 			if err != nil {
 				if !silent {
-					log.Println(mtd + "Error reading message!")
+					log.Println("Error reading message!")
 					errHandler(err)
 				}
 				return

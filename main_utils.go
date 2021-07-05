@@ -80,9 +80,9 @@ func getHello() (hello types.Hello) {
 
 	dataTypes = append(dataTypes, "ohlcv")
 	dataTypes = append(dataTypes, "trade")
-	dataTypes = append(dataTypes, "quote")
-	dataTypes = append(dataTypes, "exrate")
-	dataTypes = append(dataTypes, "book5")
+	//dataTypes = append(dataTypes, "quote")
+	//dataTypes = append(dataTypes, "exrate")
+	//dataTypes = append(dataTypes, "book5")
 
 	symbolIds = append(symbolIds, "COINBASE_SPOT_BTC_USD")
 	periodIDs = append(periodIDs, "1MIN")

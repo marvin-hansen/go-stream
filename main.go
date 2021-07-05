@@ -83,9 +83,12 @@ func TestHello() {
 	exRateInvoke := GetExchangeInvoke()
 	sdk.SetExRateInvoke(exRateInvoke)
 
+	println(" * SetBookInvoke!")
 	bookInvoke := GetBookInvoke()
 	sdk.SetBookInvoke(bookInvoke)
 
+	// Volume throws a strange error
+	println(" * GetVolumeInvoke!")
 	volInvoke := GetVolumeInvoke()
 	sdk.SetVolumeInvoke(volInvoke)
 
