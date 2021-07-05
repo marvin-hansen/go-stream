@@ -31,13 +31,13 @@ func TestHello() {
 	println(" * SetOHLCVInvoke!")
 	sdk.SetOHLCVInvoke(OHLCVInvoke)
 
-	println(" * GetHello!")
-	hello := getHello()
+	//println(" * GetHello!")
+	//hello := getHello()
 
-	println(" * SendHello!")
-	sdk.SendHello(hello)
+	//println(" * SendHello!")
+	//sdk.SendHello(hello)
 
-	println(" * Wait!")
+	println(" * Wait for messages!")
 	time.Sleep(time.Second * 1)
 
 	println(" * CloseConnection!")

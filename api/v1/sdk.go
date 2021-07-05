@@ -3,7 +3,6 @@ package v1
 import (
 	"github.com/gorilla/websocket"
 	. "go-stream/api/types"
-	"log"
 	"time"
 )
 
@@ -39,17 +38,7 @@ func NewCoinApiSDKV1(sdkConfig *SdkConfig) (sdk *SDKImpl) {
 }
 
 func (s SDKImpl) init() {
-
-	// fetch config
 	wsConfig := s.getWSConfig()
+	s.connect(wsConfig)
 
-	// connect
-	err := s.connect(wsConfig)
-	log.Println(err)
-
-	// process
-	_, stopC, err = s.processMessages()
-	if err != nil {
-		return
-	}
 }

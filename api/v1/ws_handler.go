@@ -26,6 +26,8 @@ func (s SDKImpl) getWSHandler(errHandler t.WsErrHandler) (wsHandler t.WsHandler)
 }
 
 func (s SDKImpl) processMessage(message []byte, errHandler t.WsErrHandler) (err error) {
+	mtd := "processMessage: "
+	println(mtd)
 
 	var dataMessage = new(t.DataMessage)
 	messageType := s.getMessageType(message, errHandler)

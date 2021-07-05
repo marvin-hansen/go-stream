@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gorilla/websocket"
 	"go-stream/api/types"
+	"log"
 	"time"
 )
 
@@ -14,9 +15,20 @@ func (s SDKImpl) SendHello(hello types.Hello) {
 
 	err = con.WriteMessage(1, b)
 	logError(err)
+
+	if err != nil {
+		// process
+		_, stopC, err = s.processMessages()
+		if err != nil {
+			log.Println("error processing messages")
+			logError(err)
+			return
+		}
+	}
 }
 
 var wsServe = func(cfg *types.WsConfig, handler types.WsHandler, errHandler types.WsErrHandler) (doneC, stopC chan struct{}, err error) {
+	mtd := "wsServe: "
 	//con, _, err = websocket.DefaultDialer.Dial(cfg.Endpoint, nil)
 	//if err != nil {
 	//	return nil, nil, err
@@ -47,7 +59,12 @@ var wsServe = func(cfg *types.WsConfig, handler types.WsHandler, errHandler type
 		}()
 		for {
 			_, message, err := con.ReadMessage()
+			s := string(message)
+
+			log.Println(mtd + "message: " + s)
+
 			if err != nil {
+				log.Println(mtd + "Error reading message!")
 				if !silent {
 					errHandler(err)
 				}

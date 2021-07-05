@@ -6,27 +6,25 @@ import (
 	"log"
 )
 
-func (s SDKImpl) connect(wsConfig *types.WsConfig) (err error) {
+func (s SDKImpl) connect(wsConfig *types.WsConfig) {
 	url := wsConfig.Endpoint
-
+	var err error
 	con, _, err = websocket.DefaultDialer.Dial(wsConfig.Endpoint, nil)
 	if err != nil {
 		panic("Cannot connect to: " + url)
-		return err
 	}
-
-	return nil
 }
 
 func (s SDKImpl) CloseConnection() {
 
-	// close WS channel
-	close(stopC)
+	// close WS channel if its not yet fully closed!
+	if stopC != nil {
+		close(stopC)
+	}
 
 	// close connection
 	err := con.Close()
 	if err != nil {
 		log.Println("Can't close connection")
 	}
-
 }
