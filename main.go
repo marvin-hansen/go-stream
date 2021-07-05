@@ -31,8 +31,10 @@ func TestHello() {
 	println(" * SetOHLCVInvoke!")
 	sdk.SetOHLCVInvoke(OHLCVInvoke)
 
-	println(" * SendHello!")
+	println(" * GetHello!")
 	hello := getHello()
+
+	println(" * SendHello!")
 	sdk.SendHello(hello)
 
 	println(" * Wait!")

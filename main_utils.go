@@ -18,7 +18,6 @@ func GetOHLCVInvoke() (errorInvoke types.InvokeFunction) {
 
 func GetErrorInvoke() (errorInvoke types.InvokeFunction) {
 	return func(message *types.DataMessage) (err error) {
-
 		msg := message.ErrorMessage.Message
 		if msg != "" {
 			log.Println("ErrorMessage: ", msg)

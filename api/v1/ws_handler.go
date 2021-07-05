@@ -6,24 +6,18 @@ import (
 	t "go-stream/api/types"
 )
 
-func (s SDKImpl) processMessages(errHandler t.WsErrHandler, invokeFunction t.InvokeFunction) (doneC, stopC chan struct{}, err error) {
+func (s SDKImpl) processMessages() (doneC, stopC chan struct{}, err error) {
 
+	errHandler := logError
 	wsConfig := s.getWSConfig()
-	wsHandler := s.getWSHandler(errHandler, invokeFunction)
+	wsHandler := s.getWSHandler(errHandler)
 
 	return wsServe(wsConfig, wsHandler, errHandler)
 }
 
-func (s SDKImpl) getWSHandler(errHandler t.WsErrHandler, invokeFunction t.InvokeFunction) (wsHandler t.WsHandler) {
-
+func (s SDKImpl) getWSHandler(errHandler t.WsErrHandler) (wsHandler t.WsHandler) {
 	wsHandler = func(message []byte) {
-		// convert raw message into DataMessage type
-		dataMsg := s.getDataMessage(message, errHandler)
-
-		// Apply invoke function
-		err := invokeFunction(dataMsg)
-
-		// check for errror
+		err := s.processMessage(message, errHandler)
 		if err != nil {
 			errHandler(err)
 		}
@@ -31,8 +25,9 @@ func (s SDKImpl) getWSHandler(errHandler t.WsErrHandler, invokeFunction t.Invoke
 	return wsHandler
 }
 
-func (s SDKImpl) getDataMessage(message []byte, errHandler t.WsErrHandler) (dataMessage *t.DataMessage) {
+func (s SDKImpl) processMessage(message []byte, errHandler t.WsErrHandler) (err error) {
 
+	var dataMessage = new(t.DataMessage)
 	messageType := s.getMessageType(message, errHandler)
 
 	switch messageType {
@@ -40,31 +35,39 @@ func (s SDKImpl) getDataMessage(message []byte, errHandler t.WsErrHandler) (data
 		// https://docs.coinapi.io/#error-handling
 		errorMsg := new(t.ErrorMessage)
 		_ = json.Unmarshal(message, errorMsg)
-		dataMessage = new(t.DataMessage)
 		dataMessage.ErrorMessage = errorMsg
-		return dataMessage
+		err = errorInvoke(dataMessage)
+		return checkError(err)
 
 	case t.EXCHANGERATE:
 		// https://docs.coinapi.io/#exchange-rate-in
 		msg := new(t.ExchangeRate)
 		msg.Type = messageType
 		_ = json.Unmarshal(message, msg)
-		dataMessage = new(t.DataMessage)
 		dataMessage.ExchangeRate = msg
-		return dataMessage
+		err = exchangeInvoke(dataMessage)
+		return checkError(err)
 
 	case t.BOOK:
 		// https://docs.coinapi.io/#orderbook-l2-full-in
-		return s.unMarshalOrderBook(message, messageType, errHandler)
+		dataMessage = s.unMarshalOrderBook(message, messageType, errHandler)
+		err = bookInvoke(dataMessage)
+		return checkError(err)
 
 	case t.BOOK5:
-		return s.unMarshalOrderBook(message, messageType, errHandler)
+		dataMessage = s.unMarshalOrderBook(message, messageType, errHandler)
+		err = bookInvoke(dataMessage)
+		return checkError(err)
 
 	case t.BOOK20:
-		return s.unMarshalOrderBook(message, messageType, errHandler)
+		dataMessage = s.unMarshalOrderBook(message, messageType, errHandler)
+		err = bookInvoke(dataMessage)
+		return checkError(err)
 
 	case t.BOOK50:
-		return s.unMarshalOrderBook(message, messageType, errHandler)
+		dataMessage = s.unMarshalOrderBook(message, messageType, errHandler)
+		err = bookInvoke(dataMessage)
+		return checkError(err)
 
 	case t.OHLCV:
 		// https://docs.coinapi.io/#ohlcv-in
@@ -73,7 +76,8 @@ func (s SDKImpl) getDataMessage(message []byte, errHandler t.WsErrHandler) (data
 		_ = json.Unmarshal(message, msg)
 		dataMessage = new(t.DataMessage)
 		dataMessage.Ohlcv = msg
-		return dataMessage
+		err = ohlcvInvoke(dataMessage)
+		return checkError(err)
 
 	case t.QUOTE:
 		// https://docs.coinapi.io/#quotes-in
@@ -82,7 +86,8 @@ func (s SDKImpl) getDataMessage(message []byte, errHandler t.WsErrHandler) (data
 		_ = json.Unmarshal(message, msg)
 		dataMessage = new(t.DataMessage)
 		dataMessage.Quote = msg
-		return dataMessage
+		err = quotesInvoke(dataMessage)
+		return checkError(err)
 
 	case t.RECONNECT:
 		// https://docs.coinapi.io/#reconnect-in
@@ -91,7 +96,8 @@ func (s SDKImpl) getDataMessage(message []byte, errHandler t.WsErrHandler) (data
 		_ = json.Unmarshal(message, msg)
 		dataMessage = new(t.DataMessage)
 		dataMessage.Reconnect = msg
-		return dataMessage
+		err = reconnectInvoke(dataMessage)
+		return checkError(err)
 
 	case t.HEARTBEAT:
 		// https://docs.coinapi.io/#heartbeat-in
@@ -100,7 +106,8 @@ func (s SDKImpl) getDataMessage(message []byte, errHandler t.WsErrHandler) (data
 		_ = json.Unmarshal(message, msg)
 		dataMessage = new(t.DataMessage)
 		dataMessage.Hearbeat = msg
-		return dataMessage
+		// call heartbeat here
+		return nil
 
 	case t.TRADE:
 		// https://docs.coinapi.io/#trades-in
@@ -109,7 +116,8 @@ func (s SDKImpl) getDataMessage(message []byte, errHandler t.WsErrHandler) (data
 		_ = json.Unmarshal(message, msg)
 		dataMessage = new(t.DataMessage)
 		dataMessage.Trade = msg
-		return dataMessage
+		err = tradesInvoke(dataMessage)
+		return checkError(err)
 
 	case t.VOLUME:
 		// https://docs.coinapi.io/#volume-in
@@ -118,10 +126,10 @@ func (s SDKImpl) getDataMessage(message []byte, errHandler t.WsErrHandler) (data
 		_ = json.Unmarshal(message, msg)
 		dataMessage = new(t.DataMessage)
 		dataMessage.Volume = msg
-		return dataMessage
+		err = volumeInvoke(dataMessage)
+		return checkError(err)
 	}
-
-	return dataMessage
+	return nil
 }
 
 func (s SDKImpl) unMarshalOrderBook(message []byte, msgType t.MessageType, errHandler t.WsErrHandler) (dataMessage *t.DataMessage) {

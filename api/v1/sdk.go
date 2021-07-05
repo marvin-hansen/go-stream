@@ -3,14 +3,22 @@ package v1
 import (
 	"github.com/gorilla/websocket"
 	. "go-stream/api/types"
+	"log"
+	"time"
 )
 
 type SDKImpl struct {
 	config *SdkConfig
 }
 
+const (
+	// Time allowed to write to the web socket.
+	writeWait = 1 * time.Second
+)
+
 var (
-	con *websocket.Conn
+	con   *websocket.Conn
+	stopC chan struct{}
 )
 
 var (
@@ -20,6 +28,7 @@ var (
 	ohlcvInvoke     InvokeFunction
 	volumeInvoke    InvokeFunction
 	errorInvoke     InvokeFunction
+	exchangeInvoke  InvokeFunction
 	reconnectInvoke InvokeFunction
 )
 
@@ -30,10 +39,17 @@ func NewCoinApiSDKV1(sdkConfig *SdkConfig) (sdk *SDKImpl) {
 }
 
 func (s SDKImpl) init() {
+
+	// fetch config
 	wsConfig := s.getWSConfig()
-	_ = s.connect(wsConfig)
-}
 
-func (s SDKImpl) SendHello(hello Hello) {
+	// connect
+	err := s.connect(wsConfig)
+	log.Println(err)
 
+	// process
+	_, stopC, err = s.processMessages()
+	if err != nil {
+		return
+	}
 }

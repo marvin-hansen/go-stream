@@ -3,13 +3,14 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = [
+        "dbg_utils.go",
         "endpoints.go",
         "errors.go",
         "sdk.go",
         "sdk_utils.go",
         "setters.go",
         "websocket.go",
-        "ws_connect.go",
+        "ws_connection.go",
         "ws_handler.go",
     ],
     importpath = "go-stream/api/v1",

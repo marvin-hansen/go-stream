@@ -19,6 +19,11 @@ func (s SDKImpl) connect(wsConfig *types.WsConfig) (err error) {
 }
 
 func (s SDKImpl) CloseConnection() {
+
+	// close WS channel
+	close(stopC)
+
+	// close connection
 	err := con.Close()
 	if err != nil {
 		log.Println("Can't close connection")

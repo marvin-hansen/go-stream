@@ -1,10 +1,20 @@
 package v1
 
 import (
+	"encoding/json"
 	"github.com/gorilla/websocket"
 	"go-stream/api/types"
 	"time"
 )
+
+func (s SDKImpl) SendHello(hello types.Hello) {
+
+	b, err := json.Marshal(hello)
+	logError(err)
+
+	err = con.WriteMessage(1, b)
+	logError(err)
+}
 
 var wsServe = func(cfg *types.WsConfig, handler types.WsHandler, errHandler types.WsErrHandler) (doneC, stopC chan struct{}, err error) {
 	//con, _, err = websocket.DefaultDialer.Dial(cfg.Endpoint, nil)
@@ -19,11 +29,13 @@ var wsServe = func(cfg *types.WsConfig, handler types.WsHandler, errHandler type
 		// websocket.Conn.ReadMessage or when the stopC channel is
 		// closed by the client.
 		defer close(doneC)
-		if cfg.WebsocketKeepalive {
-			keepAlive(con, time.Duration(cfg.WebsocketTimeout))
-		}
+		//
+		//if cfg.WebsocketKeepalive {
+		//	keepAlive(con, time.Duration(cfg.WebsocketTimeout))
+		//}
 		// Wait for the stopC channel to be closed.  We do that in a
 		// separate goroutine because ReadMessage is a blocking  operation.
+
 		silent := false
 		go func() {
 			select {
