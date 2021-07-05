@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"go-stream/api"
-	"log"
 	"time"
 )
 
@@ -16,20 +15,7 @@ func main() {
 	//TestMetaListExchanges()
 	//TestMetaListSymbols()
 
-	//TestConnection()
-	//
-	//TestMarshalHelloMsg()
-
 	TestHello()
-}
-
-func TestMarshalHelloMsg() {
-
-	hello := getHello()
-
-	b, _ := hello.GetJSON()
-
-	log.Println(string(b))
 }
 
 func TestMetaListExchanges() {
@@ -65,7 +51,6 @@ func TestMetaListSymbols() {
 func TestMetaListExchangeRate() {
 
 	sdk := SDK.NewSDK(apiKey)
-
 	exchange_rat_specific, _ := sdk.Exchange_rates_get_specific_rate("BTC", "USDT")
 	fmt.Println("exchange_rat_specific:")
 	exchange_rat_specific_item, _ := json.MarshalIndent(&exchange_rat_specific, "", "  ")
@@ -117,17 +102,4 @@ func TestHello() {
 	sdk.CloseConnection()
 
 	println("Goodbye!")
-}
-
-func TestConnection() {
-	println("Start!")
-
-	println(" * NewSDK!")
-	sdk := api.NewSDK(apiKey)
-
-	println(" * Connect & Wait!")
-	time.Sleep(time.Second * 2)
-
-	println(" * CloseConnection!")
-	sdk.CloseConnection()
 }
