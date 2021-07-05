@@ -3,21 +3,16 @@ package v1
 import (
 	"github.com/gorilla/websocket"
 	. "go-stream/api/types"
-	"time"
 )
 
 type SDKImpl struct {
 	config *SdkConfig
 }
 
-const (
-	// Time allowed to write to the web socket.
-	writeWait = 1 * time.Second
-)
-
 var (
-	con   *websocket.Conn
-	stopC chan struct{}
+	con     *websocket.Conn
+	stopC   chan struct{}
+	running bool
 )
 
 var (
@@ -40,5 +35,5 @@ func NewCoinApiSDKV1(sdkConfig *SdkConfig) (sdk *SDKImpl) {
 func (s SDKImpl) init() {
 	wsConfig := s.getWSConfig()
 	s.connect(wsConfig)
-
+	running = false
 }

@@ -6,15 +6,6 @@ import (
 	t "go-stream/api/types"
 )
 
-func (s SDKImpl) processMessages() (doneC, stopC chan struct{}, err error) {
-
-	errHandler := logError
-	wsConfig := s.getWSConfig()
-	wsHandler := s.getWSHandler(errHandler)
-
-	return wsServe(wsConfig, wsHandler, errHandler)
-}
-
 func (s SDKImpl) getWSHandler(errHandler t.WsErrHandler) (wsHandler t.WsHandler) {
 	wsHandler = func(message []byte) {
 		err := s.processMessage(message, errHandler)
@@ -26,8 +17,8 @@ func (s SDKImpl) getWSHandler(errHandler t.WsErrHandler) (wsHandler t.WsHandler)
 }
 
 func (s SDKImpl) processMessage(message []byte, errHandler t.WsErrHandler) (err error) {
-	mtd := "processMessage: "
-	println(mtd)
+	//mtd := "processMessage: "
+	//println(mtd)
 
 	var dataMessage = new(t.DataMessage)
 	messageType := s.getMessageType(message, errHandler)

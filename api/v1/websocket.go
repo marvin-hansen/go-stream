@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"encoding/json"
 	"github.com/gorilla/websocket"
 	"go-stream/api/types"
 	"log"
@@ -9,45 +8,64 @@ import (
 )
 
 func (s SDKImpl) SendHello(hello types.Hello) {
+	mtd := "SendHello: "
 
-	b, err := json.Marshal(hello)
-	logError(err)
+	h := `
+			{
+			  "type": "hello",
+			  "apikey": "550ECBDB-B1EF-42FE-8702-19CCAD9C2A7C",
+			  "heartbeat": false,
+			  "subscribe_data_type": ["ohlcv"],
+			  "subscribe_filter_asset_id": ["BTC"],
+		      "subscribe_filter_period_id": ["1MIN"],
+			  "subscribe_filter_exchange_id": ["KUCOIN"]
+			}
+`
+
+	b := []byte(h)
+	var err error
+
+	//m, err := json.Marshal(hello)
+	//logError(err)
+	//b := []byte(m)
 
 	err = con.WriteMessage(1, b)
-	logError(err)
-
 	if err != nil {
-		// process
-		_, stopC, err = s.processMessages()
+		log.Println(mtd, "can't send Hello message!")
+		logError(err)
+		return
+	}
+
+	if running == false {
+		_, stopC, err = s.process()
 		if err != nil {
 			log.Println("error processing messages")
 			logError(err)
+			running = false
 			return
 		}
+		running = true
 	}
 }
 
-var wsServe = func(cfg *types.WsConfig, handler types.WsHandler, errHandler types.WsErrHandler) (doneC, stopC chan struct{}, err error) {
-	mtd := "wsServe: "
-	//con, _, err = websocket.DefaultDialer.Dial(cfg.Endpoint, nil)
-	//if err != nil {
-	//	return nil, nil, err
-	//}
+func (s SDKImpl) process() (doneC, stopC chan struct{}, err error) {
+	mtd := "process: "
+
+	errHandler := logError
+	handler := s.getWSHandler(errHandler)
 
 	doneC = make(chan struct{})
 	stopC = make(chan struct{})
+
+	println(mtd, " * Processing ")
+
 	go func() {
-		// This function will exit either on error from
-		// websocket.Conn.ReadMessage or when the stopC channel is
-		// closed by the client.
+		// This function will exit either on error from ReadMessage
+		// or when the stopC channel is closed by the client.
 		defer close(doneC)
-		//
-		//if cfg.WebsocketKeepalive {
-		//	keepAlive(con, time.Duration(cfg.WebsocketTimeout))
-		//}
+
 		// Wait for the stopC channel to be closed.  We do that in a
 		// separate goroutine because ReadMessage is a blocking  operation.
-
 		silent := false
 		go func() {
 			select {
@@ -57,15 +75,15 @@ var wsServe = func(cfg *types.WsConfig, handler types.WsHandler, errHandler type
 			}
 			_ = con.Close()
 		}()
-		for {
-			_, message, err := con.ReadMessage()
-			s := string(message)
 
-			log.Println(mtd + "message: " + s)
+		var message []byte
+		for {
+			_, message, err = con.ReadMessage()
+			printMsg(mtd, message)
 
 			if err != nil {
-				log.Println(mtd + "Error reading message!")
 				if !silent {
+					log.Println(mtd + "Error reading message!")
 					errHandler(err)
 				}
 				return
@@ -74,6 +92,11 @@ var wsServe = func(cfg *types.WsConfig, handler types.WsHandler, errHandler type
 		}
 	}()
 	return
+}
+
+func printMsg(mtd string, message []byte) {
+	msg := string(message)
+	log.Println(mtd + "message: " + msg)
 }
 
 func keepAlive(c *websocket.Conn, timeout time.Duration) {
@@ -101,13 +124,4 @@ func keepAlive(c *websocket.Conn, timeout time.Duration) {
 			}
 		}
 	}()
-}
-
-func closeConnection(c *websocket.Conn) (err error) {
-	err = c.Close()
-	if err != nil {
-		return err
-	} else {
-		return nil
-	}
 }

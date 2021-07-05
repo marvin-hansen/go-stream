@@ -19,7 +19,7 @@ func getSDK(sdkConfig *SdkConfig) (sdk SDK) {
 
 func getSDKConfig(apiKey string) (sdkConfig *SdkConfig) {
 
-	var exchanges = make([]string, 3)
+	var exchanges = [25]string{}
 	exchanges[0] = "BINANCE"
 
 	sdkConfig = &SdkConfig{

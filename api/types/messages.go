@@ -60,11 +60,11 @@ type Hello struct {
 	Type                                    MessageType `json:"type"`
 	Api_key                                 string      `json:"apikey"`
 	Heartbeat                               bool        `json:"heartbeat"`
-	Subscribe_data_type                     []string    `json:"subscribe_data_type"`
-	Subscribe_filter_symbol_id              []string    `json:"subscribe_filter_symbol_id"`
-	Subscribe_filter_asset_id               []string    `json:"subscribe_filter_asset_id"`
-	Subscribe_filter_period_id              []string    `json:"subscribe_filter_period_id"`
-	Subscribe_filter_exchange_id            []string    `json:"subscribe_filter_exchange_id"`
+	Subscribe_data_type                     [25]string  `json:"subscribe_data_type"`
+	Subscribe_filter_symbol_id              [25]string  `json:"subscribe_filter_symbol_id"`
+	Subscribe_filter_asset_id               [25]string  `json:"subscribe_filter_asset_id"`
+	Subscribe_filter_period_id              [25]string  `json:"subscribe_filter_period_id"`
+	Subscribe_filter_exchange_id            [25]string  `json:"subscribe_filter_exchange_id"`
 	Subscribe_update_limit_ms_quote         uint32      `json:"subscribe_update_limit_ms_quote"`
 	Subscribe_update_limit_ms_book_snapshot uint32      `json:"subscribe_update_limit_ms_book_snapshot"`
 }

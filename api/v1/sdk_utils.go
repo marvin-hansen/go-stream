@@ -13,7 +13,7 @@ func (s SDKImpl) getWSConfig() (wsCfg *types.WsConfig) {
 	return wsCfg
 }
 
-func (s SDKImpl) getHello(dataTypes, symbolIDs, assetIDs, periodIDs []string) (hello types.Hello) {
+func (s SDKImpl) getHello(dataTypes, symbolIDs, assetIDs, periodIDs [25]string) (hello types.Hello) {
 
 	hello = types.Hello{
 		Type:                         "hello",

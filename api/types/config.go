@@ -4,7 +4,7 @@ type SdkConfig struct {
 	ApiKey      string
 	ApiVersion  ApiVersion
 	Environment EnvironmentType
-	Exchanges   []string
+	Exchanges   [25]string
 	Heartbeat   bool
 	Timeout     int
 }
