@@ -79,8 +79,6 @@ func (s SDKImpl) process() (doneC, stopC chan struct{}, err error) {
 		var message []byte
 		for {
 			_, message, err = con.ReadMessage()
-			printMsg(mtd, message)
-
 			if err != nil {
 				if !silent {
 					log.Println(mtd + "Error reading message!")
@@ -88,6 +86,7 @@ func (s SDKImpl) process() (doneC, stopC chan struct{}, err error) {
 				}
 				return
 			}
+			//printMsg(mtd, message)
 			handler(message)
 		}
 	}()
