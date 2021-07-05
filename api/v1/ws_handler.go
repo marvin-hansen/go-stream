@@ -17,8 +17,6 @@ func (s SDKImpl) getWSHandler(errHandler t.WsErrHandler) (wsHandler t.WsHandler)
 }
 
 func (s SDKImpl) processMessage(message []byte, errHandler t.WsErrHandler) (err error) {
-	//mtd := "processMessage: "
-	//println(mtd)
 
 	var dataMessage = new(t.DataMessage)
 	messageType := s.getMessageType(message, errHandler)
@@ -89,8 +87,10 @@ func (s SDKImpl) processMessage(message []byte, errHandler t.WsErrHandler) (err 
 		_ = json.Unmarshal(message, msg)
 		dataMessage = new(t.DataMessage)
 		dataMessage.Reconnect = msg
-		err = reconnectInvoke(dataMessage)
-		return checkError(err)
+
+		// call reconnect here
+
+		return nil
 
 	case t.HEARTBEAT:
 		// https://docs.coinapi.io/#heartbeat-in
@@ -99,7 +99,9 @@ func (s SDKImpl) processMessage(message []byte, errHandler t.WsErrHandler) (err 
 		_ = json.Unmarshal(message, msg)
 		dataMessage = new(t.DataMessage)
 		dataMessage.Hearbeat = msg
+
 		// call heartbeat here
+
 		return nil
 
 	case t.TRADE:
@@ -133,7 +135,6 @@ func (s SDKImpl) unMarshalOrderBook(message []byte, msgType t.MessageType, errHa
 		errHandler(err)
 		return nil
 	}
-
 	dataMessage = new(t.DataMessage)
 	dataMessage.Orderbook = bookMsg
 	return dataMessage
@@ -149,8 +150,6 @@ func (s SDKImpl) getMessageType(message []byte, errHandler t.WsErrHandler) (mess
 	messageType = t.MessageType(j.Get("type").MustString())
 	return messageType
 }
-
-const layout = "2009-01-11T15:04:05.0000000Z"
 
 func newJSON(data []byte) (j *simplejson.Json, err error) {
 	j, err = simplejson.NewJson(data)

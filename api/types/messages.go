@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// DataMessage is a composite type as substitute for Golang's missing type inheritance.
+// DataMessage composite type substitutes missing type inheritance.
 type DataMessage struct {
 	Type         *MessageType
 	ErrorMessage *ErrorMessage
@@ -180,7 +180,7 @@ type Ohlcv struct {
 }
 
 func (s Ohlcv) String() string {
-	return fmt.Sprintf("<Ohlcv> {Type: %v, Symbol_id: %v, Sequence: %v, Time_period_start: %v, Time_period_start: %v, Time_period_end: %v, Time_open: %v, Time_close: %v, Price_open: %v, Price_high: %v, Price_low: %v,Price_close: %v, Volume_traded: %v, Trades_count: %v}",
+	return fmt.Sprintf("<OHLCV> {Type: %v, Symbol_id: %v, Sequence: %v, Time_period_start: %v, Time_period_start: %v, Time_period_end: %v, Time_open: %v, Time_close: %v, Price_open: %v, Price_high: %v, Price_low: %v,Price_close: %v, Volume_traded: %v, Trades_count: %v}",
 		s.Type,
 		s.Symbol_id,
 		s.Sequence,

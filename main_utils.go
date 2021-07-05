@@ -6,12 +6,55 @@ import (
 	"log"
 )
 
+func GetBookInvoke() (errorInvoke types.InvokeFunction) {
+	return func(message *types.DataMessage) (err error) {
+		msg := message.Orderbook
+		log.Println(msg)
+		println()
+		return nil
+	}
+}
+
+func GetVolumeInvoke() (errorInvoke types.InvokeFunction) {
+	return func(message *types.DataMessage) (err error) {
+		msg := message.Volume
+		log.Println(msg)
+		println()
+		return nil
+	}
+}
+
+func GetExchangeInvoke() (errorInvoke types.InvokeFunction) {
+	return func(message *types.DataMessage) (err error) {
+		msg := message.ExchangeRate
+		log.Println(msg)
+		println()
+		return nil
+	}
+}
+
+func GetTradeInvoke() (errorInvoke types.InvokeFunction) {
+	return func(message *types.DataMessage) (err error) {
+		msg := message.Trade
+		log.Println(msg)
+		println()
+		return nil
+	}
+}
+
+func GetQuoteInvoke() (errorInvoke types.InvokeFunction) {
+	return func(message *types.DataMessage) (err error) {
+		msg := message.Quote
+		log.Println(msg)
+		println()
+		return nil
+	}
+}
 func GetOHLCVInvoke() (errorInvoke types.InvokeFunction) {
 	return func(message *types.DataMessage) (err error) {
-
 		msg := message.Ohlcv
 		log.Println(msg)
-
+		println()
 		return nil
 	}
 }

@@ -118,3 +118,10 @@ go_repository(
     sum = "h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=",
     version = "v0.1.0",
 )
+
+go_repository(
+    name = "com_github_coinapi_coinapi_sdk",
+    importpath = "github.com/CoinAPI/coinapi-sdk",
+    sum = "h1:jCLqQfIySgWHu88Of0sd6gWRdZh0lp9vI5/tHF7azgE=",
+    version = "v0.0.0-20210625123735-50d3e13b5b94",
+)

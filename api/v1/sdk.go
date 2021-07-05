@@ -16,14 +16,13 @@ var (
 )
 
 var (
-	tradesInvoke    InvokeFunction
-	quotesInvoke    InvokeFunction
-	bookInvoke      InvokeFunction
-	ohlcvInvoke     InvokeFunction
-	volumeInvoke    InvokeFunction
-	errorInvoke     InvokeFunction
-	exchangeInvoke  InvokeFunction
-	reconnectInvoke InvokeFunction
+	tradesInvoke   InvokeFunction
+	quotesInvoke   InvokeFunction
+	bookInvoke     InvokeFunction
+	ohlcvInvoke    InvokeFunction
+	volumeInvoke   InvokeFunction
+	errorInvoke    InvokeFunction
+	exchangeInvoke InvokeFunction
 )
 
 func NewCoinApiSDKV1(sdkConfig *SdkConfig) (sdk *SDKImpl) {
