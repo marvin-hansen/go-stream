@@ -7,10 +7,11 @@ import (
 )
 
 var wsServe = func(cfg *types.WsConfig, handler types.WsHandler, errHandler types.WsErrHandler) (doneC, stopC chan struct{}, err error) {
-	c, _, err := websocket.DefaultDialer.Dial(cfg.Endpoint, nil)
-	if err != nil {
-		return nil, nil, err
-	}
+	//con, _, err = websocket.DefaultDialer.Dial(cfg.Endpoint, nil)
+	//if err != nil {
+	//	return nil, nil, err
+	//}
+
 	doneC = make(chan struct{})
 	stopC = make(chan struct{})
 	go func() {
@@ -19,7 +20,7 @@ var wsServe = func(cfg *types.WsConfig, handler types.WsHandler, errHandler type
 		// closed by the client.
 		defer close(doneC)
 		if cfg.WebsocketKeepalive {
-			keepAlive(c, time.Duration(cfg.WebsocketTimeout))
+			keepAlive(con, time.Duration(cfg.WebsocketTimeout))
 		}
 		// Wait for the stopC channel to be closed.  We do that in a
 		// separate goroutine because ReadMessage is a blocking  operation.
@@ -30,10 +31,10 @@ var wsServe = func(cfg *types.WsConfig, handler types.WsHandler, errHandler type
 				silent = true
 			case <-doneC:
 			}
-			_ = c.Close()
+			_ = con.Close()
 		}()
 		for {
-			_, message, err := c.ReadMessage()
+			_, message, err := con.ReadMessage()
 			if err != nil {
 				if !silent {
 					errHandler(err)

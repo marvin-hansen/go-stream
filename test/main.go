@@ -1,48 +1,17 @@
 package main
 
 import (
-	"flag"
 	"fmt"
-	"os"
-	"os/signal"
-	"syscall"
 )
 
-// :8000
-var addr = flag.String("addr", "", "http service address")
-var channel = ""
-
 func main() {
-	println("Main")
+	println("Hello Main!")
 
-	flag.Parse()
+	hello := getHello()
 
-	client, err := NewWebSocketClient(*addr, channel)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("Connecting")
+	println(hello)
 
-	helloMsg := getHello()
-
-	err = client.Write(helloMsg)
-	if err != nil {
-		fmt.Printf("error: %v, writing error\n", err)
-	}
-
-	//client.listen()
-
-	// Close connection correctly on exit
-	sigs := make(chan os.Signal, 1)
-
-	// `signal.Notify` registers the given channel to
-	// receive notifications of the specified signals.
-	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
-
-	// The program will wait here until it gets the
-	<-sigs
-	client.Stop()
-	fmt.Println("Goodbye")
+	fmt.Println("Goodbye!")
 }
 
 func getHello() (hello string) {

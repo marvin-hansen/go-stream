@@ -14,15 +14,6 @@ func (s SDKImpl) processMessages(errHandler t.WsErrHandler, invokeFunction t.Inv
 	return wsServe(wsConfig, wsHandler, errHandler)
 }
 
-func (s SDKImpl) getWSConfig() (wsCfg *t.WsConfig) {
-	wsCfg = &t.WsConfig{
-		Endpoint:           s.url,
-		WebsocketKeepalive: s.keepAlive,
-		WebsocketTimeout:   s.timeOut,
-	}
-	return wsCfg
-}
-
 func (s SDKImpl) getWSHandler(errHandler t.WsErrHandler, invokeFunction t.InvokeFunction) (wsHandler t.WsHandler) {
 
 	wsHandler = func(message []byte) {

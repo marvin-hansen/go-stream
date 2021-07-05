@@ -5,4 +5,4 @@ set -o nounset
 set -o pipefail
 
 # Run binary
-command bazel run //api/main:main
+command bazel run //:main

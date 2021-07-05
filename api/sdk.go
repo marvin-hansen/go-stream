@@ -2,9 +2,14 @@ package api
 
 import . "go-stream/api/types"
 
-const apiKey = "YOUR_API_KEY_HERE"
+//Supported exchanges & assets
+// https://www.coinapi.io/integration
+// BINANCE			Binance
+// BINANCEFTSCUAT	Binance Futures Testnet (Coin/fapi)
+// BINANCEFTSC		Binance Futures (Coin/fapi)
+// BINANCEFTS		Binance Futures (USDT/dapi)
 
-func NewSDK() (sdk SDK) {
+func NewSDK(apiKey string) (sdk SDK) {
 	config := getSDKConfig(apiKey)
 	sdk = getSDK(config)
 	return sdk

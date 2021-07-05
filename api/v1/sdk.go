@@ -1,15 +1,17 @@
 package v1
 
 import (
+	"github.com/gorilla/websocket"
 	. "go-stream/api/types"
 )
 
 type SDKImpl struct {
-	apiKey    string
-	url       string
-	keepAlive bool
-	timeOut   int
+	config *SdkConfig
 }
+
+var (
+	con *websocket.Conn
+)
 
 var (
 	tradesInvoke    InvokeFunction
@@ -19,33 +21,19 @@ var (
 	volumeInvoke    InvokeFunction
 	errorInvoke     InvokeFunction
 	reconnectInvoke InvokeFunction
-	wsCfg           WsConfig
 )
 
 func NewCoinApiSDKV1(sdkConfig *SdkConfig) (sdk *SDKImpl) {
-	url := getUrl(sdkConfig.Environment)
-	sdk = &SDKImpl{
-		apiKey:    sdkConfig.ApiKey,
-		url:       url,
-		keepAlive: sdkConfig.Heartbeat,
-		timeOut:   sdkConfig.Timeout,
-	}
+	sdk = &SDKImpl{sdkConfig}
 	sdk.init()
 	return sdk
 }
 
 func (s SDKImpl) init() {
-	wsCfg = WsConfig{
-		Endpoint:           s.url,
-		WebsocketKeepalive: s.keepAlive,
-		WebsocketTimeout:   s.timeOut,
-	}
+	wsConfig := s.getWSConfig()
+	_ = s.connect(wsConfig)
 }
 
-func (s SDKImpl) SendHelloMessage(hello Hello) {
-
-}
-
-func (s SDKImpl) CloseConnect() {
+func (s SDKImpl) SendHello(hello Hello) {
 
 }

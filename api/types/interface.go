@@ -1,8 +1,8 @@
 package types
 
 type SDK interface {
-	SendHelloMessage(hello Hello)
-	CloseConnect()
+	SendHello(hello Hello)
+	CloseConnection()
 	SetTradesInvoke(function InvokeFunction)
 	SetQuoteInvoke(function InvokeFunction)
 	SetBookInvoke(function InvokeFunction)

@@ -8,7 +8,7 @@ import (
 func getSDK(sdkConfig *SdkConfig) (sdk SDK) {
 	switch sdkConfig.ApiVersion {
 	case ApiV1:
-		// Bind interface to implementation with matching API version.
+		// Bind interface to implementation matching API version.
 		sdk = v1.NewCoinApiSDKV1(sdkConfig)
 
 	default:
@@ -18,10 +18,15 @@ func getSDK(sdkConfig *SdkConfig) (sdk SDK) {
 }
 
 func getSDKConfig(apiKey string) (sdkConfig *SdkConfig) {
+
+	var exchanges = make([]string, 3)
+	exchanges[0] = "BINANCE"
+
 	sdkConfig = &SdkConfig{
 		ApiKey:      apiKey,
 		ApiVersion:  ApiV1,
 		Environment: TestInsecure,
+		Exchanges:   exchanges,
 		Heartbeat:   false,
 		Timeout:     3,
 	}

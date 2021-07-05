@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -30,6 +30,18 @@ filegroup(
 
 go_library(
     name = "go_default_library",
-    srcs = ["main.go"],
+    srcs = [
+        "main.go",
+        "main_utils.go",
+    ],
     importpath = "go-stream/",
+    deps = [
+        "//api:go_default_library",
+        "//api/types:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "main",
+    embed = [":go_default_library"],
 )
