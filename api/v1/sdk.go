@@ -16,13 +16,16 @@ var (
 )
 
 var (
+	// data handlers
 	tradesInvoke   InvokeFunction
 	quotesInvoke   InvokeFunction
 	bookInvoke     InvokeFunction
 	ohlcvInvoke    InvokeFunction
 	volumeInvoke   InvokeFunction
-	errorInvoke    InvokeFunction
 	exchangeInvoke InvokeFunction
+	// sys handlers
+	errorInvoke     InvokeFunction
+	heartBeatInvoke InvokeFunction
 )
 
 func NewCoinApiSDKV1(sdkConfig *SdkConfig) (sdk *SDKImpl) {
