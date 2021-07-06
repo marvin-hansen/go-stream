@@ -8,7 +8,7 @@ go_library(
         "errors.go",
         "sdk.go",
         "sdk_utils.go",
-        "setters.go",
+        "set_methods.go",
         "websocket.go",
         "ws_connection.go",
         "ws_handler.go",
