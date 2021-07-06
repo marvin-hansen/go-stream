@@ -1,5 +1,6 @@
 package types
 
+// ApiVersion custom ENUM for SDK forward compatibility
 type ApiVersion int
 
 const (
@@ -18,6 +19,7 @@ const (
 )
 
 // MessageType mimics a string enum.
+// https://docs.coinapi.io/#messages
 type MessageType string
 
 const (
@@ -29,8 +31,8 @@ const (
 	BOOK50       MessageType = "book50"
 	OHLCV        MessageType = "ohlcv"
 	VOLUME       MessageType = "volume"
-	HEARTBEAT    MessageType = "hearbeat" // yes, its a typo the official msg spec!
-	ERROR        MessageType = "error"
+	HEARTBEAT    MessageType = "hearbeat" // DO NOT FIX! it's a typo in the official msg spec!
+	ERROR        MessageType = "error"    // Otherwise processMessage(.) fails to handle heartbeat messages!
 	EXCHANGERATE MessageType = "exrate"
 	RECONNECT    MessageType = "reconnect"
 )
