@@ -39,23 +39,29 @@ func (s SDKImpl) processMessage(message []byte, errHandler t.WsErrHandler) (err 
 		err = exchangeInvoke(dataMessage)
 		return checkError(err)
 
-	case t.BOOK:
+	case t.BOOK_L2_FULL:
 		// https://docs.coinapi.io/#orderbook-l2-full-in
 		dataMessage = s.unMarshalOrderBook(message, messageType, errHandler)
 		err = bookInvoke(dataMessage)
 		return checkError(err)
 
-	case t.BOOK5:
+	case t.BOOK_L2_TOP_5:
 		dataMessage = s.unMarshalOrderBook(message, messageType, errHandler)
 		err = bookInvoke(dataMessage)
 		return checkError(err)
 
-	case t.BOOK20:
+	case t.BOOK_L2_TOP_20:
 		dataMessage = s.unMarshalOrderBook(message, messageType, errHandler)
 		err = bookInvoke(dataMessage)
 		return checkError(err)
 
-	case t.BOOK50:
+	case t.BOOK_L2_TOP_50:
+		dataMessage = s.unMarshalOrderBook(message, messageType, errHandler)
+		err = bookInvoke(dataMessage)
+		return checkError(err)
+
+	case t.BOOK_L3_FULL:
+		// https://docs.coinapi.io/#orderbook-l3-full-in
 		dataMessage = s.unMarshalOrderBook(message, messageType, errHandler)
 		err = bookInvoke(dataMessage)
 		return checkError(err)
