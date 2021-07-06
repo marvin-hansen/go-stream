@@ -1,9 +1,10 @@
 package types
 
 type SdkConfig struct {
-	ApiKey      string
-	ApiVersion  ApiVersion
-	Environment EnvironmentType
+	ApiKey          string
+	ApiVersion      ApiVersion
+	EnvironmentType EnvironmentType
+	ReconnectType   ReconnectType
 }
 
 // WsConfig webservice configuration

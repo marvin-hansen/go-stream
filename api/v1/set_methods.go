@@ -37,3 +37,14 @@ func (s SDKImpl) SetErrorInvoke(function InvokeFunction) {
 func (s SDKImpl) SetHeartBeatInvoke(function InvokeFunction) {
 	heartBeatInvoke = function
 }
+
+func (s SDKImpl) SetReconnectInvoke(function InvokeFunction) {
+	reconnectInvoke = function
+}
+
+func (s SDKImpl) setHelloMessage(helloMessage *Hello) {
+	helloMsg = helloMessage
+}
+func (s SDKImpl) getHelloMessage() (helloMessage *Hello) {
+	return helloMsg
+}

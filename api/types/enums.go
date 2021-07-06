@@ -37,3 +37,12 @@ const (
 	EXCHANGERATE   MessageType = "exrate"
 	RECONNECT      MessageType = "reconnect"
 )
+
+// ReconnectType defines the reconnect behavior upon receiving a reconnect message
+// https://docs.coinapi.io/#reconnect-in
+type ReconnectType int
+
+const (
+	OnConnectionClose ReconnectType = iota
+	OnReconnectMessage
+)

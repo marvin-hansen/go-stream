@@ -155,6 +155,15 @@ func (s Hello) GetJSON() (b []byte, err error) {
 	return b, nil
 }
 
+func (s Hello) PrintJSON() {
+	b, err := s.GetJSON()
+	if err != nil {
+		log.Println(err)
+	}
+	println(string(b))
+
+}
+
 // OrderBook Book message is sent for each snapshot or update of the order book.
 // After subscription to this data type is initialized, we immediately start delivering updates to the order book
 // and at least one snapshot will be provided as soon as possible with the nearest update of the book.

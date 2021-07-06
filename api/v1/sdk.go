@@ -10,9 +10,10 @@ type SDKImpl struct {
 }
 
 var (
-	con     *websocket.Conn
-	stopC   chan struct{}
-	running bool
+	con      *websocket.Conn
+	stopC    chan struct{}
+	running  bool
+	helloMsg *Hello
 )
 
 var (
@@ -26,6 +27,7 @@ var (
 	// sys handlers
 	errorInvoke     InvokeFunction
 	heartBeatInvoke InvokeFunction
+	reconnectInvoke InvokeFunction
 )
 
 func NewCoinApiSDKV1(sdkConfig *SdkConfig) (sdk *SDKImpl) {
@@ -35,7 +37,5 @@ func NewCoinApiSDKV1(sdkConfig *SdkConfig) (sdk *SDKImpl) {
 }
 
 func (s SDKImpl) init() {
-	wsConfig := s.getWSConfig()
-	s.connect(wsConfig)
-	running = false
+	_ = s.OpenConnection() // errors get handled inside connect()
 }

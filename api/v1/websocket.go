@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func (s SDKImpl) SendHello(hello types.Hello) {
+func (s SDKImpl) SendHello(hello *types.Hello) (err error) {
 
 	b, err := hello.GetJSON()
 	logError(err)
@@ -14,25 +14,39 @@ func (s SDKImpl) SendHello(hello types.Hello) {
 	if err != nil {
 		log.Println("can't send Hello message!")
 		logError(err)
-		return
+		return err
 	}
 
+	// store last hello message in case of a hard re-connect.
+	s.setHelloMessage(hello)
+
 	if running == false {
-		_, stopC, err = s.process()
+		err = s.startProcessing()
 		if err != nil {
-			log.Println("error processing messages")
+			log.Println("can't start message processing!")
 			logError(err)
-			running = false
-			return
+			return err
 		}
 		running = true
 	}
+	return err
 }
 
-func (s SDKImpl) process() (doneC, stopC chan struct{}, err error) {
-
+func (s SDKImpl) startProcessing() (err error) {
 	errHandler := logError
 	handler := s.getWSHandler(errHandler)
+	_, stopC, err = s.process(handler, errHandler)
+	if err != nil {
+		log.Println("error starting message processing!")
+		logError(err)
+		running = false
+		return err
+	}
+	running = true
+	return nil
+}
+
+func (s SDKImpl) process(handler types.WsHandler, errHandler types.WsErrHandler) (doneC, stopC chan struct{}, err error) {
 
 	doneC = make(chan struct{})
 	stopC = make(chan struct{})
@@ -74,6 +88,6 @@ func (s SDKImpl) process() (doneC, stopC chan struct{}, err error) {
 
 func printRawMsg(message []byte) {
 	msg := string(message)
-	log.Println("message: ")
+	log.Println("raw message: ")
 	log.Println(msg)
 }

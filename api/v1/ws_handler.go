@@ -22,14 +22,6 @@ func (s SDKImpl) processMessage(message []byte, errHandler t.WsErrHandler) (err 
 	messageType := s.getMessageType(message, errHandler)
 
 	switch messageType {
-	case t.ERROR:
-		// https://docs.coinapi.io/#error-handling
-		errorMsg := new(t.ErrorMessage)
-		_ = json.Unmarshal(message, errorMsg)
-		dataMessage.ErrorMessage = errorMsg
-		err = errorInvoke(dataMessage)
-		return checkError(err)
-
 	case t.EXCHANGERATE:
 		// https://docs.coinapi.io/#exchange-rate-in
 		msg := new(t.ExchangeRate)
@@ -37,12 +29,6 @@ func (s SDKImpl) processMessage(message []byte, errHandler t.WsErrHandler) (err 
 		_ = json.Unmarshal(message, msg)
 		dataMessage.ExchangeRate = msg
 		err = exchangeInvoke(dataMessage)
-		return checkError(err)
-
-	case t.BOOK_L2_FULL:
-		// https://docs.coinapi.io/#orderbook-l2-full-in
-		dataMessage = s.unMarshalOrderBook(message, messageType, errHandler)
-		err = bookInvoke(dataMessage)
 		return checkError(err)
 
 	case t.BOOK_L2_TOP_5:
@@ -56,6 +42,12 @@ func (s SDKImpl) processMessage(message []byte, errHandler t.WsErrHandler) (err 
 		return checkError(err)
 
 	case t.BOOK_L2_TOP_50:
+		dataMessage = s.unMarshalOrderBook(message, messageType, errHandler)
+		err = bookInvoke(dataMessage)
+		return checkError(err)
+
+	case t.BOOK_L2_FULL:
+		// https://docs.coinapi.io/#orderbook-l2-full-in
 		dataMessage = s.unMarshalOrderBook(message, messageType, errHandler)
 		err = bookInvoke(dataMessage)
 		return checkError(err)
@@ -86,28 +78,6 @@ func (s SDKImpl) processMessage(message []byte, errHandler t.WsErrHandler) (err 
 		err = quotesInvoke(dataMessage)
 		return checkError(err)
 
-	case t.RECONNECT:
-		// https://docs.coinapi.io/#reconnect-in
-		msg := new(t.Reconnect)
-		msg.Type = messageType
-		_ = json.Unmarshal(message, msg)
-		dataMessage = new(t.DataMessage)
-		dataMessage.Reconnect = msg
-
-		// handle reconnect here
-
-		return nil
-
-	case t.HEARTBEAT:
-		// https://docs.coinapi.io/#heartbeat-in
-		msg := new(t.Heartbeat)
-		msg.Type = messageType
-		_ = json.Unmarshal(message, msg)
-		dataMessage = new(t.DataMessage)
-		dataMessage.Hearbeat = msg
-		err = heartBeatInvoke(dataMessage)
-		return checkError(err)
-
 	case t.TRADE:
 		// https://docs.coinapi.io/#trades-in
 		msg := new(t.Trade)
@@ -127,7 +97,36 @@ func (s SDKImpl) processMessage(message []byte, errHandler t.WsErrHandler) (err 
 		dataMessage.Volume = msg
 		err = volumeInvoke(dataMessage)
 		return checkError(err)
+
+	case t.ERROR:
+		// https://docs.coinapi.io/#error-handling
+		errorMsg := new(t.ErrorMessage)
+		_ = json.Unmarshal(message, errorMsg)
+		dataMessage.ErrorMessage = errorMsg
+		err = errorInvoke(dataMessage)
+		return checkError(err)
+
+	case t.RECONNECT:
+		// https://docs.coinapi.io/#reconnect-in
+		msg := new(t.Reconnect)
+		msg.Type = messageType
+		_ = json.Unmarshal(message, msg)
+		dataMessage = new(t.DataMessage)
+		dataMessage.Reconnect = msg
+		err = reconnectInvoke(dataMessage)
+		return checkError(err)
+
+	case t.HEARTBEAT:
+		// https://docs.coinapi.io/#heartbeat-in
+		msg := new(t.Heartbeat)
+		msg.Type = messageType
+		_ = json.Unmarshal(message, msg)
+		dataMessage = new(t.DataMessage)
+		dataMessage.Hearbeat = msg
+		err = heartBeatInvoke(dataMessage)
+		return checkError(err)
 	}
+
 	return nil
 }
 

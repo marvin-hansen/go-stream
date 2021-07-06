@@ -38,9 +38,10 @@ func printErrorMessage(problem, solution string) {
 
 func getSDKConfig(apiKey string) (sdkConfig *SdkConfig) {
 	sdkConfig = &SdkConfig{
-		ApiKey:      apiKey,
-		ApiVersion:  ApiV1,
-		Environment: TestInsecure,
+		ApiKey:          apiKey,
+		ApiVersion:      ApiV1,
+		EnvironmentType: TestInsecure,
+		ReconnectType:   OnConnectionClose,
 	}
 	return sdkConfig
 }

@@ -2,22 +2,23 @@ package v1
 
 import (
 	"github.com/gorilla/websocket"
-	"go-stream/api/types"
 	"log"
 )
 
-func (s SDKImpl) connect(wsConfig *types.WsConfig) {
+func (s SDKImpl) OpenConnection() (err error) {
 	mtd := "connect: "
+	wsConfig := s.getWSConfig()
 	url := wsConfig.Endpoint
-	var err error
 	con, _, err = websocket.DefaultDialer.Dial(wsConfig.Endpoint, nil)
 	if err != nil {
 		log.Println(mtd, err)
 		panic(mtd + "Cannot connect to: " + url)
 	}
+	running = false
+	return err
 }
 
-func (s SDKImpl) CloseConnection() {
+func (s SDKImpl) CloseConnection() (err error) {
 	mtd := "CloseConnection: "
 
 	// Stop processing messages
@@ -29,9 +30,26 @@ func (s SDKImpl) CloseConnection() {
 	}
 
 	// close connection
-	err := con.Close()
+	err = con.Close()
 	if err != nil {
 		log.Println(mtd + "Can't close connection")
 		log.Println(err)
 	}
+	return err
+}
+
+func (s SDKImpl) Reconnect() (err error) {
+
+	err = s.CloseConnection()
+	logError(err)
+
+	err = s.OpenConnection()
+	logError(err)
+
+	hello := s.getHelloMessage()
+
+	err = s.SendHello(hello)
+	logError(err)
+
+	return err
 }

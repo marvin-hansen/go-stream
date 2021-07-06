@@ -1,139 +1,67 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"go-stream/api"
+	"go-stream/api/types"
 	"time"
 )
-
-import SDK "github.com/CoinAPI/coinapi-sdk/data-api/go-rest/v1"
 
 const apiKey = "550ECBDB-B1EF-42FE-8702-19CCAD9C2A7C"
 
 func main() {
-
-	//TestMetaListExchanges()
-	//TestMetaListSymbols()
-	//TestHello()
-
+	TestSendHello()
 	TestHeartbeat()
+	TestReconnect()
 }
 
-func TestMetaListExchanges() {
-	//https://github.com/coinapi/coinapi-sdk/blob/master/data-api/go-rest/main.go
+func TestSendHello() {
 
-	sdk := SDK.NewSDK(apiKey)
-
-	exchanges, _ := sdk.Metadata_list_exchanges()
-	fmt.Println("exchanges:")
-	fmt.Println("  number:", len(exchanges))
-	exchanges_item, _ := json.MarshalIndent(&exchanges[0], "", "  ")
-	fmt.Println("  first items:", string(exchanges_item))
-
-	for i, _ := range exchanges {
-		exchange, _ := json.MarshalIndent(&exchanges[i], "", "  ")
-		fmt.Println("  first items:", string(exchange))
-	}
-}
-
-func TestMetaListSymbols() {
-	sdk := SDK.NewSDK(apiKey)
-
-	spots, _, _, _ := sdk.Metadata_list_symbols()
-	fmt.Println("spots:")
-	fmt.Println("number:", len(spots))
-
-	//for i, _ := range spots {
-	//	spots_item, _ := json.MarshalIndent(&spots[i], "", "  ")
-	//	fmt.Println("first items:", string(spots_item))
-	//}
-}
-
-func TestMetaListExchangeRate() {
-
-	sdk := SDK.NewSDK(apiKey)
-	exchange_rat_specific, _ := sdk.Exchange_rates_get_specific_rate("BTC", "USDT")
-	fmt.Println("exchange_rat_specific:")
-	exchange_rat_specific_item, _ := json.MarshalIndent(&exchange_rat_specific, "", "  ")
-	fmt.Println("first items:", string(exchange_rat_specific_item))
-}
-
-func TestHeartbeat() {
-	// This test can only process OHLCV as no other invoke functions are set!
-	println("Start!")
+	printHeader("TestSendHello!")
 
 	println(" * NewSDK!")
 	sdk := api.NewSDK(apiKey)
+	// verbose switches off console print of heartbeat & reconnect messages
+	sys := getSysInvokes(false)
+
+	println(" * SetErrorInvoke!")
+	sdk.SetErrorInvoke(sys.ErrorInvoke)
 
 	println(" * SetHeartBeatInvoke!")
-	heartBeatInvoke := GetHeartBeatInvoke()
-	sdk.SetHeartBeatInvoke(heartBeatInvoke)
+	sdk.SetHeartBeatInvoke(sys.HeartBeatInvoke)
 
-	println(" * SetErrorInvoke!")
-	errInvokeFunc := GetErrorInvoke()
-	sdk.SetErrorInvoke(errInvokeFunc)
+	println(" * SetReconnectInvoke!")
+	sdk.SetReconnectInvoke(sys.ReconnectInvoke)
 
 	println(" * SetOHLCVInvoke!")
-	OHLCVInvoke := GetOHLCVInvoke()
-	sdk.SetOHLCVInvoke(OHLCVInvoke)
-
-	println(" * GetHello: Heartbeat!")
-	hello := getHello(false, true)
-
-	println(" * SendHello: Heartbeat!")
-	sdk.SendHello(hello)
-
-	println(" * Wait for messages!")
-	time.Sleep(time.Second * 10)
-
-	println(" * CloseConnection!")
-	sdk.CloseConnection()
-
-	println("Goodbye!")
-
-}
-
-func TestHello() {
-	println("Start!")
-
-	println(" * NewSDK!")
-	sdk := api.NewSDK(apiKey)
-
-	println(" * SetErrorInvoke!")
-	errInvokeFunc := GetErrorInvoke()
-	sdk.SetErrorInvoke(errInvokeFunc)
-
-	println(" * SetOHLCVInvoke!")
-	OHLCVInvoke := GetOHLCVInvoke()
+	OHLCVInvoke := GetInvokeFunction(types.OHLCV)
 	sdk.SetOHLCVInvoke(OHLCVInvoke)
 
 	println(" * SetTradesInvoke!")
-	tradeInvoke := GetTradeInvoke()
+	tradeInvoke := GetInvokeFunction(types.TRADE)
 	sdk.SetTradesInvoke(tradeInvoke)
 
 	println(" * SetQuoteInvoke!")
-	quoteInvoke := GetQuoteInvoke()
+	quoteInvoke := GetInvokeFunction(types.QUOTE)
 	sdk.SetQuoteInvoke(quoteInvoke)
 
 	println(" * SetExRateInvoke!")
-	exRateInvoke := GetExchangeInvoke()
+	exRateInvoke := GetInvokeFunction(types.EXCHANGERATE)
 	sdk.SetExRateInvoke(exRateInvoke)
 
 	println(" * SetBookInvoke!")
-	bookInvoke := GetBookInvoke()
+	bookInvoke := GetInvokeFunction(types.BOOK_L2_FULL)
 	sdk.SetBookInvoke(bookInvoke)
 
 	// Volume throws a strange error
 	println(" * GetVolumeInvoke!")
-	volInvoke := GetVolumeInvoke()
+	volInvoke := GetInvokeFunction(types.VOLUME)
 	sdk.SetVolumeInvoke(volInvoke)
 
 	println(" * GetHello: Single data type!")
 	hello := getHello(false, false)
 
 	println(" * SendHello: Single data type!")
-	sdk.SendHello(hello)
+	_ = sdk.SendHello(hello)
 
 	println(" * Wait for messages!")
 	time.Sleep(time.Second * 5)
@@ -142,13 +70,101 @@ func TestHello() {
 	hello = getHello(true, false)
 
 	println(" * SendHello: Expanded data types!")
-	sdk.SendHello(hello)
+	_ = sdk.SendHello(hello)
 
 	println(" * Wait for messages!")
 	time.Sleep(time.Second * 5)
 
 	println(" * CloseConnection!")
-	sdk.CloseConnection()
+	_ = sdk.CloseConnection()
 
 	println("Goodbye!")
+}
+
+func TestReconnect() {
+	// This test only process OHLCV as no other invoke functions are set!
+	printHeader("TestReconnect!")
+
+	println(" * NewSDK!")
+	sdk := api.NewSDK(apiKey)
+	sys := getSysInvokes(true)
+
+	println(" * SetErrorInvoke!")
+	sdk.SetErrorInvoke(sys.ErrorInvoke)
+
+	println(" * SetHeartBeatInvoke!")
+	sdk.SetHeartBeatInvoke(sys.HeartBeatInvoke)
+
+	println(" * SetReconnectInvoke!")
+	sdk.SetReconnectInvoke(sys.ReconnectInvoke)
+
+	println(" * SetOHLCVInvoke!")
+	OHLCVInvoke := GetInvokeFunction(types.OHLCV)
+	sdk.SetOHLCVInvoke(OHLCVInvoke)
+
+	println(" * GetHello: Single data type!")
+	hello := getHello(false, true)
+
+	println(" * SendHello: Single data type!")
+	_ = sdk.SendHello(hello)
+
+	println(" * Wait for messages!")
+	time.Sleep(time.Second * 10)
+
+	println("******************")
+	println("* Hard Reconnect *")
+	println("******************")
+	_ = sdk.Reconnect()
+
+	println(" * Wait for messages!")
+	time.Sleep(time.Second * 5)
+
+	println(" * CloseConnection!")
+	_ = sdk.CloseConnection()
+
+	println("Goodbye!")
+}
+
+func TestHeartbeat() {
+	// This test only process OHLCV as no other invoke functions are set!
+	printHeader("TestHeartbeat!")
+
+	println(" * NewSDK!")
+	sdk := api.NewSDK(apiKey)
+	sys := getSysInvokes(true)
+
+	println(" * SetErrorInvoke!")
+	sdk.SetErrorInvoke(sys.ErrorInvoke)
+
+	println(" * SetHeartBeatInvoke!")
+	sdk.SetHeartBeatInvoke(sys.HeartBeatInvoke)
+
+	println(" * SetReconnectInvoke!")
+	sdk.SetReconnectInvoke(sys.ReconnectInvoke)
+
+	println(" * SetOHLCVInvoke!")
+	OHLCVInvoke := GetInvokeFunction(types.OHLCV)
+	sdk.SetOHLCVInvoke(OHLCVInvoke)
+
+	println(" * GetHello: Heartbeat!")
+	hello := getHello(false, true)
+
+	println(" * SendHello: Heartbeat!")
+	_ = sdk.SendHello(hello)
+
+	println(" * Wait for messages!")
+	time.Sleep(time.Second * 10)
+
+	println(" * CloseConnection!")
+	_ = sdk.CloseConnection()
+
+	println("Goodbye!")
+}
+
+func printHeader(msg string) {
+	println()
+	println("=====================")
+	println("Start: " + msg)
+	println("=====================")
+	println()
 }
