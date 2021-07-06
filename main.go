@@ -12,10 +12,12 @@ import SDK "github.com/CoinAPI/coinapi-sdk/data-api/go-rest/v1"
 const apiKey = "550ECBDB-B1EF-42FE-8702-19CCAD9C2A7C"
 
 func main() {
+
 	//TestMetaListExchanges()
 	//TestMetaListSymbols()
+	//TestHello()
 
-	TestHello()
+	TestHeartbeat()
 }
 
 func TestMetaListExchanges() {
@@ -57,6 +59,41 @@ func TestMetaListExchangeRate() {
 	fmt.Println("first items:", string(exchange_rat_specific_item))
 }
 
+func TestHeartbeat() {
+	// This test can only process OHLCV as no other invoke functions are set!
+	println("Start!")
+
+	println(" * NewSDK!")
+	sdk := api.NewSDK(apiKey)
+
+	println(" * SetHeartBeatInvoke!")
+	heartBeatInvoke := GetHeartBeatInvoke()
+	sdk.SetHeartBeatInvoke(heartBeatInvoke)
+
+	println(" * SetErrorInvoke!")
+	errInvokeFunc := GetErrorInvoke()
+	sdk.SetErrorInvoke(errInvokeFunc)
+
+	println(" * SetOHLCVInvoke!")
+	OHLCVInvoke := GetOHLCVInvoke()
+	sdk.SetOHLCVInvoke(OHLCVInvoke)
+
+	println(" * GetHello: Heartbeat!")
+	hello := getHello(false, true)
+
+	println(" * SendHello: Heartbeat!")
+	sdk.SendHello(hello)
+
+	println(" * Wait for messages!")
+	time.Sleep(time.Second * 10)
+
+	println(" * CloseConnection!")
+	sdk.CloseConnection()
+
+	println("Goodbye!")
+
+}
+
 func TestHello() {
 	println("Start!")
 
@@ -92,10 +129,19 @@ func TestHello() {
 	volInvoke := GetVolumeInvoke()
 	sdk.SetVolumeInvoke(volInvoke)
 
-	println(" * GetHello!")
-	hello := getHello()
+	println(" * GetHello: Single data type!")
+	hello := getHello(false, false)
 
-	println(" * SendHello!")
+	println(" * SendHello: Single data type!")
+	sdk.SendHello(hello)
+
+	println(" * Wait for messages!")
+	time.Sleep(time.Second * 5)
+
+	println(" * GetHello: Expanded data types!")
+	hello = getHello(true, false)
+
+	println(" * SendHello: Expanded data types!")
 	sdk.SendHello(hello)
 
 	println(" * Wait for messages!")

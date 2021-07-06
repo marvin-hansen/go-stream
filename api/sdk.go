@@ -10,6 +10,7 @@ import . "go-stream/api/types"
 // BINANCEFTS		Binance Futures (USDT/dapi)
 
 func NewSDK(apiKey string) (sdk SDK) {
+	validateApiKey(apiKey)
 	config := getSDKConfig(apiKey)
 	sdk = getSDK(config)
 	return sdk

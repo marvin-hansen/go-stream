@@ -88,7 +88,7 @@ func (s SDKImpl) processMessage(message []byte, errHandler t.WsErrHandler) (err 
 		dataMessage = new(t.DataMessage)
 		dataMessage.Reconnect = msg
 
-		// call reconnect here
+		// handle reconnect here
 
 		return nil
 
@@ -99,10 +99,8 @@ func (s SDKImpl) processMessage(message []byte, errHandler t.WsErrHandler) (err 
 		_ = json.Unmarshal(message, msg)
 		dataMessage = new(t.DataMessage)
 		dataMessage.Hearbeat = msg
-
-		// call heartbeat here
-
-		return nil
+		err = heartBeatInvoke(dataMessage)
+		return checkError(err)
 
 	case t.TRADE:
 		// https://docs.coinapi.io/#trades-in

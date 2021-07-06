@@ -4,9 +4,6 @@ type SdkConfig struct {
 	ApiKey      string
 	ApiVersion  ApiVersion
 	Environment EnvironmentType
-	Exchanges   [25]string
-	Heartbeat   bool
-	Timeout     int
 }
 
 // WsConfig webservice configuration

@@ -1,10 +1,8 @@
 package v1
 
 import (
-	"github.com/gorilla/websocket"
 	"go-stream/api/types"
 	"log"
-	"time"
 )
 
 func (s SDKImpl) SendHello(hello types.Hello) {
@@ -66,35 +64,16 @@ func (s SDKImpl) process() (doneC, stopC chan struct{}, err error) {
 				}
 				return
 			}
+
+			//printRawMsg(message)
 			handler(message)
 		}
 	}()
 	return
 }
 
-func keepAlive(c *websocket.Conn, timeout time.Duration) {
-	ticker := time.NewTicker(timeout)
-
-	lastResponse := time.Now()
-	c.SetPongHandler(func(msg string) error {
-		lastResponse = time.Now()
-		return nil
-	})
-
-	go func() {
-		defer ticker.Stop()
-		for {
-			deadline := time.Now().Add(5 * time.Second)
-			err := c.WriteControl(websocket.PingMessage, []byte{}, deadline)
-			if err != nil {
-				_ = c.Close()
-				return
-			}
-			<-ticker.C
-			if time.Since(lastResponse) > timeout {
-				_ = c.Close()
-				return
-			}
-		}
-	}()
+func printRawMsg(message []byte) {
+	msg := string(message)
+	log.Println("message: ")
+	log.Println(msg)
 }

@@ -28,6 +28,12 @@ func (s SDKImpl) SetExRateInvoke(function InvokeFunction) {
 	exchangeInvoke = function
 }
 
+// sys handlers
+
 func (s SDKImpl) SetErrorInvoke(function InvokeFunction) {
 	errorInvoke = function
+}
+
+func (s SDKImpl) SetHeartBeatInvoke(function InvokeFunction) {
+	heartBeatInvoke = function
 }

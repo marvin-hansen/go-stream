@@ -29,8 +29,7 @@ const (
 	BOOK50       MessageType = "book50"
 	OHLCV        MessageType = "ohlcv"
 	VOLUME       MessageType = "volume"
-	HEARTBEAT    MessageType = "heartbeat"
-	HELLO        MessageType = "hello"
+	HEARTBEAT    MessageType = "hearbeat" // yes, its a typo the official msg spec!
 	ERROR        MessageType = "error"
 	EXCHANGERATE MessageType = "exrate"
 	RECONNECT    MessageType = "reconnect"
