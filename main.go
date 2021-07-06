@@ -12,10 +12,47 @@ func main() {
 	TestSendHello()
 	TestHeartbeat()
 	TestReconnect()
+
+	//TestVolumeError()
+}
+
+func TestVolumeError() {
+	printHeader("TestVolumeError!")
+
+	// Replicates error thrown when requesting volume data:
+	//websocket: close 1006 (abnormal closure): unexpected EOF
+
+	println(" * NewSDK!")
+	sdk := api.NewSDK(apiKey)
+	// verbose switches off console print of heartbeat & reconnect messages
+	sys := getSysInvokes(false)
+	println(" * SetErrorInvoke!")
+	sdk.SetErrorInvoke(sys.ErrorInvoke)
+	println(" * SetHeartBeatInvoke!")
+	sdk.SetHeartBeatInvoke(sys.HeartBeatInvoke)
+	println(" * SetReconnectInvoke!")
+	sdk.SetReconnectInvoke(sys.ReconnectInvoke)
+
+	println(" * SetVolumeInvoke!")
+	OHLCVInvoke := GetInvokeFunction(types.VOLUME)
+	sdk.SetOHLCVInvoke(OHLCVInvoke)
+
+	println(" * GetHello: Volume only!")
+	hello := getVolumeHello(false)
+
+	println(" * SendHello: Requesting Volume type only !")
+	_ = sdk.SendHello(hello)
+
+	println(" * Wait for messages!")
+	time.Sleep(time.Second * 5)
+
+	println(" * CloseConnection!")
+	_ = sdk.CloseConnection()
+
+	println("Goodbye!")
 }
 
 func TestSendHello() {
-
 	printHeader("TestSendHello!")
 
 	println(" * NewSDK!")
@@ -53,7 +90,7 @@ func TestSendHello() {
 	sdk.SetBookInvoke(bookInvoke)
 
 	// Volume throws a strange error
-	println(" * GetVolumeInvoke!")
+	println(" * SetVolumeInvoke!")
 	volInvoke := GetInvokeFunction(types.VOLUME)
 	sdk.SetVolumeInvoke(volInvoke)
 

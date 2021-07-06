@@ -79,15 +79,10 @@ func (s SDKImpl) process(handler types.WsHandler, errHandler types.WsErrHandler)
 				return
 			}
 
+			//
 			//printRawMsg(message)
 			handler(message)
 		}
 	}()
 	return
-}
-
-func printRawMsg(message []byte) {
-	msg := string(message)
-	log.Println("raw message: ")
-	log.Println(msg)
 }

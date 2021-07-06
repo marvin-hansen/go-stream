@@ -6,6 +6,27 @@ import (
 	"log"
 )
 
+func getVolumeHello(heartbeat bool) (hello *t.Hello) {
+	var dataTypes []string
+	var symbolIds []string
+	var periodIDs []string
+
+	dataTypes = append(dataTypes, "volume")
+	symbolIds = append(symbolIds, "COINBASE_SPOT_BTC_USD")
+	periodIDs = append(periodIDs, "1MIN")
+
+	hello = &t.Hello{
+		Type:                       "hello",
+		Api_key:                    apiKey,
+		Heartbeat:                  heartbeat,
+		Subscribe_data_type:        dataTypes,
+		Subscribe_filter_period_id: periodIDs,
+		Subscribe_filter_symbol_id: symbolIds,
+	}
+	return hello
+
+}
+
 func getHello(expanded, heartbeat bool) (hello *t.Hello) {
 	// After your WebSocket connection is established, you must send us a Hello message which contains:
 	// * Stream preferences (Heartbeat and subscription details)
