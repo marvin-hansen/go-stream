@@ -38,7 +38,7 @@ go_library(
     deps = [
         "//api:go_default_library",
         "//api/types:go_default_library",
-        "@com_github_coinapi_coinapi_sdk//data-api/go-rest/v1:go_default_library",
+        "//api/web_socket:go_default_library",
     ],
 )
 

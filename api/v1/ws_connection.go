@@ -1,38 +1,23 @@
 package v1
 
 import (
-	"github.com/gorilla/websocket"
 	"log"
 )
 
 func (s SDKImpl) OpenConnection() (err error) {
-	mtd := "connect: "
-	wsConfig := s.getWSConfig()
-	url := wsConfig.Endpoint
-	con, _, err = websocket.DefaultDialer.Dial(wsConfig.Endpoint, nil)
-	if err != nil {
-		log.Println(mtd, err)
-		panic(mtd + "Cannot connect to: " + url)
-	}
-	running = false
+	url := getUrl(s.config.EnvironmentType)
+	err = s.ws.Connect(url, nil)
 	return err
 }
 
 func (s SDKImpl) CloseConnection() (err error) {
-	mtd := "CloseConnection: "
-
 	// Stop processing messages
 	running = false
 
-	// close WS channel if its not yet fully closed!
-	if stopC != nil {
-		close(stopC)
-	}
-
 	// close connection
-	err = con.Close()
+	err = s.ws.Close()
 	if err != nil {
-		log.Println(mtd + "Can't close connection")
+		log.Println("Can't close connection")
 		log.Println(err)
 	}
 	return err

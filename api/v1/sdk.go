@@ -1,17 +1,16 @@
 package v1
 
 import (
-	"github.com/gorilla/websocket"
 	. "go-stream/api/types"
+	"go-stream/api/web_socket"
 )
 
 type SDKImpl struct {
 	config *SdkConfig
+	ws     *web_socket.WebSocket
 }
 
 var (
-	con      *websocket.Conn
-	stopC    chan struct{}
 	running  bool
 	helloMsg *Hello
 )
@@ -31,11 +30,15 @@ var (
 )
 
 func NewCoinApiSDKV1(sdkConfig *SdkConfig) (sdk *SDKImpl) {
-	sdk = &SDKImpl{sdkConfig}
-	sdk.init()
+	sdk = new(SDKImpl)
+	sdk.init(sdkConfig)
 	return sdk
 }
 
-func (s SDKImpl) init() {
-	_ = s.OpenConnection() // errors get handled inside connect()
+func (s SDKImpl) init(sdkConfig *SdkConfig) {
+	s.config = sdkConfig
+	url := getUrl(s.config.EnvironmentType)
+	ws := web_socket.NewWebSocket(url)
+	s.ws = ws
+	//_ = s.OpenConnection() // errors get handled inside connect()
 }

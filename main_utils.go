@@ -6,25 +6,32 @@ import (
 	"log"
 )
 
+func logError(err error) {
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func printRawMsg(message []byte) {
+	msg := string(message)
+	log.Println("raw message: ")
+	log.Println(msg)
+}
+
 func getVolumeHello(heartbeat bool) (hello *t.Hello) {
 	var dataTypes []string
-	var symbolIds []string
-	var periodIDs []string
-
+	var assets []string
 	dataTypes = append(dataTypes, "volume")
-	symbolIds = append(symbolIds, "COINBASE_SPOT_BTC_USD")
-	periodIDs = append(periodIDs, "1MIN")
+	assets = append(assets, "BTC")
 
 	hello = &t.Hello{
-		Type:                       "hello",
-		Api_key:                    apiKey,
-		Heartbeat:                  heartbeat,
-		Subscribe_data_type:        dataTypes,
-		Subscribe_filter_period_id: periodIDs,
-		Subscribe_filter_symbol_id: symbolIds,
+		Type:                      "hello",
+		Api_key:                   apiKey,
+		Heartbeat:                 heartbeat,
+		Subscribe_data_type:       dataTypes,
+		Subscribe_filter_asset_id: nil,
 	}
 	return hello
-
 }
 
 func getHello(expanded, heartbeat bool) (hello *t.Hello) {
@@ -183,7 +190,7 @@ func printMessage(msgType t.MessageType, message *t.DataMessage) {
 		log.Println(msg)
 		println()
 	case t.VOLUME:
-		msg := message.Quote
+		msg := message.Volume
 		log.Println(msg)
 		println()
 

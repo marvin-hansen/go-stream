@@ -17,7 +17,7 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "//api/types:go_default_library",
+        "//api/web_socket:go_default_library",
         "@com_github_bitly_go_simplejson//:go_default_library",
-        "@com_github_gorilla_websocket//:go_default_library",
     ],
 )

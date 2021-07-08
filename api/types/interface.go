@@ -4,8 +4,8 @@ type SDK interface {
 	SendHello(hello *Hello) (err error)
 	OpenConnection() (err error)
 	CloseConnection() (err error)
-	// Reconnect closes the current connection, opens a new one,
-	// and resends the last hello message. No message buffering, just hard reconnect!
+	// Reconnect is hard reset of the current connection, it closes the current connection,
+	// opens a new one, and resends the last hello message. No message buffering, just hard reconnect!
 	Reconnect() (err error)
 
 	// sys handlers

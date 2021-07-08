@@ -3,6 +3,7 @@ package main
 import (
 	"go-stream/api"
 	"go-stream/api/types"
+	"go-stream/api/web_socket"
 	"time"
 )
 
@@ -10,10 +11,41 @@ const apiKey = "550ECBDB-B1EF-42FE-8702-19CCAD9C2A7C"
 
 func main() {
 	TestSendHello()
-	TestHeartbeat()
-	TestReconnect()
+	//TestHeartbeat()
+	//TestReconnect()
 
 	//TestVolumeError()
+
+	//TestWebSocket()
+}
+
+func TestWebSocket() {
+	printHeader("TestWebSocket!")
+
+	println(" * Connect!!")
+	url := "ws://ws-sandbox.coinapi.io/v1/"
+	ws := web_socket.NewWebSocket(url)
+
+	println(" * GetHello: Single data type!")
+	hello := getHello(false, false)
+
+	b, _ := hello.GetJSON()
+
+	_ = ws.WriteByteMessage(b)
+
+	errHandler := logError
+	msgHandler := printRawMsg
+
+	err := ws.ReadByteMessages(msgHandler, errHandler)
+	if err != nil {
+		logError(err)
+	}
+
+	println(" * Wait!")
+	time.Sleep(3 * time.Second)
+
+	println(" * Close!")
+	_ = ws.Close()
 }
 
 func TestVolumeError() {
@@ -34,8 +66,8 @@ func TestVolumeError() {
 	sdk.SetReconnectInvoke(sys.ReconnectInvoke)
 
 	println(" * SetVolumeInvoke!")
-	OHLCVInvoke := GetInvokeFunction(types.VOLUME)
-	sdk.SetOHLCVInvoke(OHLCVInvoke)
+	VolInvoke := GetInvokeFunction(types.VOLUME)
+	sdk.SetVolumeInvoke(VolInvoke)
 
 	println(" * GetHello: Volume only!")
 	hello := getVolumeHello(false)
@@ -88,11 +120,6 @@ func TestSendHello() {
 	println(" * SetBookInvoke!")
 	bookInvoke := GetInvokeFunction(types.BOOK_L2_FULL)
 	sdk.SetBookInvoke(bookInvoke)
-
-	// Volume throws a strange error
-	println(" * SetVolumeInvoke!")
-	volInvoke := GetInvokeFunction(types.VOLUME)
-	sdk.SetVolumeInvoke(volInvoke)
 
 	println(" * GetHello: Single data type!")
 	hello := getHello(false, false)
