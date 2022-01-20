@@ -4,6 +4,8 @@ import (
 	"fmt"
 )
 
+const API_KEY = ""
+
 func main() {
 	println("Hello Main!")
 
@@ -19,7 +21,7 @@ func getHello() (hello string) {
 	hello = `
 			{
 			  "type": "hello",
-			  "apikey": "550ECBDB-B1EF-42FE-8702-19CCAD9C2A7C",
+			  "apikey": API_KEY,
 			  "heartbeat": false,
 			  "subscribe_data_type": ["ohlcv"],
 			  "subscribe_filter_asset_id": ["BTC", "ETH"]
